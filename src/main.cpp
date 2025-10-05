@@ -31,35 +31,11 @@ int main() {
     canvas.addKeyListener(*inputHandler);
 
     // Create audio manager and initialize engine sound
-    // Try multiple paths to find the audio file
     AudioManager audioManager;
-    bool audioEnabled = false;
-
-    std::vector<std::string> possiblePaths = {
-        "src/audio/carnoise.wav",           // When run from project root
-        "../src/audio/carnoise.wav",        // When run from build directory
-        "../../src/audio/carnoise.wav",     // When run from nested build dir
-        "carnoise.wav"                      // When audio file is copied to executable location
-    };
-
-    for (const auto& path : possiblePaths) {
-        if (std::filesystem::exists(path)) {
-            std::cout << "Attempting to load audio from: " << path << std::endl;
-            audioEnabled = audioManager.initialize(path);
-            if (audioEnabled) {
-                std::cout << "Audio successfully loaded!" << std::endl;
-                break;
-            }
-        }
-    }
+    bool audioEnabled = audioManager.initialize("carnoise.wav");
 
     if (!audioEnabled) {
-        std::cout << "No audio file found. Checked paths:" << std::endl;
-        for (const auto& path : possiblePaths) {
-            std::cout << "  - " << path << " (exists: "
-                      << (std::filesystem::exists(path) ? "yes" : "no") << ")" << std::endl;
-        }
-        std::cout << "Continuing without audio..." << std::endl;
+        std::cout << "Audio file 'carnoise.wav' not found. Continuing without audio..." << std::endl;
     }
 
     // Handle window resize
@@ -78,6 +54,10 @@ int main() {
 
         // Update renderer
         vehicleRenderer.update();
+
+        // Update camera to follow vehicle
+        auto pos = vehicle.getPosition();
+        sceneManager.updateCameraFollowTarget(pos[0], pos[1], pos[2], vehicle.getRotation());
 
         // Update audio based on vehicle state
         if (audioEnabled) {

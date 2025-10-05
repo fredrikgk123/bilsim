@@ -1,0 +1,17 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-build/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-build/src/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-build/src/external/glfw/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-build/src/external/glfw/src/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/src/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/src/core/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/src/graphics/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/src/input/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/src/ui/cmake_install.cmake",
+		"/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/src/audio/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

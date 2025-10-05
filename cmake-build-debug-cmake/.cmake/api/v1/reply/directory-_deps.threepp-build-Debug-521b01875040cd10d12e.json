@@ -1,0 +1,105 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"cmake-build-debug-cmake/_deps/threepp-src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 108,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 118,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 119,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 120,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "share/threepp",
+			"paths" : 
+			[
+				"cmake-build-debug-cmake/_deps/threepp-build/threepp-config.cmake",
+				"cmake-build-debug-cmake/_deps/threepp-build/threepp-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/threepp-build/src/libthreepp.a"
+			],
+			"targetId" : "threepp::@52082e1cdf13f2f1bb69",
+			"targetIndex" : 6,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "cmake-build-debug-cmake/_deps/threepp-src/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "share/threepp",
+			"exportName" : "threepp-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "threepp::@52082e1cdf13f2f1bb69",
+					"index" : 6
+				}
+			],
+			"paths" : 
+			[
+				"_deps/threepp-build/CMakeFiles/Export/e7fc55c233965d81f687dece22972682/threepp-targets.cmake"
+			],
+			"type" : "export"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/threepp-build",
+		"source" : "cmake-build-debug-cmake/_deps/threepp-src"
+	}
+}

@@ -13,10 +13,14 @@ target_link_libraries(bilsim PUBLIC
         audio
 )
 
-# Copy audio file to build directory automatically
-add_custom_command(TARGET bilsim POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_SOURCE_DIR}/src/audio/carnoise.wav
-        $<TARGET_FILE_DIR:bilsim>/carnoise.wav
-    COMMENT "Copying audio file to build directory"
-)
+# Copy audio file from project root to build directory
+if(EXISTS "${CMAKE_SOURCE_DIR}/carnoise.wav")
+    add_custom_command(TARGET bilsim POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/carnoise.wav"
+            "$<TARGET_FILE_DIR:bilsim>/carnoise.wav"
+        COMMENT "Copying audio file to build directory"
+    )
+else()
+    message(WARNING "carnoise.wav not found at project root")
+endif()

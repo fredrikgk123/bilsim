@@ -1,0 +1,328 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "_deps/threepp-build",
+					"childIndexes" : 
+					[
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.threepp-build-Debug-521b01875040cd10d12e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.19"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "cmake-build-debug-cmake/_deps/threepp-src"
+				},
+				{
+					"build" : "_deps/threepp-build/src",
+					"childIndexes" : 
+					[
+						3
+					],
+					"jsonFile" : "directory-_deps.threepp-build.src-Debug-f264ada10869c3fc9b5e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.19"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "cmake-build-debug-cmake/_deps/threepp-src/src",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "_deps/threepp-build/src/external/glfw",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-_deps.threepp-build.src.external.glfw-Debug-36fbf9775c69d4c62f88.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "cmake-build-debug-cmake/_deps/threepp-src/src/external/glfw"
+				},
+				{
+					"build" : "_deps/threepp-build/src/external/glfw/src",
+					"jsonFile" : "directory-_deps.threepp-build.src.external.glfw.src-Debug-18e9e55cd310a42e5b31.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "cmake-build-debug-cmake/_deps/threepp-src/src/external/glfw/src",
+					"targetIndexes" : 
+					[
+						3,
+						8
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						6,
+						7,
+						8,
+						9,
+						10
+					],
+					"jsonFile" : "directory-src-Debug-b6cf2213fc5053b67c22.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src/core",
+					"jsonFile" : "directory-src.core-Debug-36daa2e54a8600f0fb49.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/core",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "src/graphics",
+					"jsonFile" : "directory-src.graphics-Debug-b504ff7107bad588abeb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/graphics",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/input",
+					"jsonFile" : "directory-src.input-Debug-f22e018e3cef74fb719b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/input",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "src/ui",
+					"jsonFile" : "directory-src.ui-Debug-c1f78044602f134edac6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/ui",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "src/audio",
+					"jsonFile" : "directory-src.audio-Debug-6dd7c1bc2a54f05cc844.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/audio",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10
+					],
+					"name" : "bilsim",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						4,
+						5,
+						7
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "threepp",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "GLFW",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						3,
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 10,
+					"id" : "audio::@80fb33ee6d4208c554cc",
+					"jsonFile" : "target-audio-Debug-1d25f42153ae665c0bea.json",
+					"name" : "audio",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "bilsim::@145eef247bfb46b6828c",
+					"jsonFile" : "target-bilsim-Debug-d9c12274ab33b500a7f5.json",
+					"name" : "bilsim",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "core::@0618756b1ff51bca1a0e",
+					"jsonFile" : "target-core-Debug-d25274d71b085debd1c0.json",
+					"name" : "core",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "glfw::@1cd1ba13d31585a49d98",
+					"jsonFile" : "target-glfw-Debug-ba745cc0121ba0327308.json",
+					"name" : "glfw",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "graphics::@51dde881cca20334ba54",
+					"jsonFile" : "target-graphics-Debug-f6a7707fa2fae394d91d.json",
+					"name" : "graphics",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "input::@fbb2a56cb88dc49cea17",
+					"jsonFile" : "target-input-Debug-bb396b41521063551510.json",
+					"name" : "input",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "threepp::@52082e1cdf13f2f1bb69",
+					"jsonFile" : "target-threepp-Debug-55ba8525ac7b0c4e87d0.json",
+					"name" : "threepp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "ui::@e0ce1d6ecae3dc67b834",
+					"jsonFile" : "target-ui-Debug-c392f8fb9a676878d176.json",
+					"name" : "ui",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "update_mappings::@1cd1ba13d31585a49d98",
+					"jsonFile" : "target-update_mappings-Debug-f424eeb6585f27499fb2.json",
+					"name" : "update_mappings",
+					"projectIndex" : 2
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake",
+		"source" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

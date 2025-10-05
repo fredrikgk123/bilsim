@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/CMakeFiles/threepp-populate"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/CMakeFiles/threepp-populate.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/CMakeFiles/threepp-populate-complete.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-build.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-configure.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-download.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-install.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-mkdir.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-patch.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-test.rule"
+		},
+		{
+			"file" : "/Users/fredrikkarlsaune/Desktop/dev/bilsim/cmake-build-debug-cmake/_deps/threepp-subbuild/threepp-populate-prefix/src/threepp-populate-stamp/threepp-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"threepp-populate"
+		],
+		"name" : "threepp-populate"
+	}
+}
