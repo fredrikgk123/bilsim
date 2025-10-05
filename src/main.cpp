@@ -17,6 +17,7 @@ int main() {
     // Create scene manager
     SceneManager sceneManager;
     sceneManager.setupCamera(canvas.aspect());
+    sceneManager.setupRenderer(canvas.size());
     sceneManager.setupLighting();
     sceneManager.setupGround();
 
