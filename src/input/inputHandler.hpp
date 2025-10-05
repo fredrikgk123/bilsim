@@ -4,7 +4,7 @@
 #include "vehicle.hpp"
 
 class InputHandler : public threepp::KeyListener {
-public:
+  public:
     InputHandler(Vehicle& vehicle);
 
     void onKeyPressed(threepp::KeyEvent evt) override;
@@ -12,10 +12,10 @@ public:
 
     void update(float deltaTime);
 
-private:
+  private:
     Vehicle& vehicle_;
-    bool upPressed_ = false;
-    bool downPressed_ = false;
-    bool leftPressed_ = false;
+    bool upPressed_    = false;
+    bool downPressed_  = false;
+    bool leftPressed_  = false;
     bool rightPressed_ = false;
 };

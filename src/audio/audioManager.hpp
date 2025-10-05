@@ -5,14 +5,14 @@
 class Vehicle;
 
 class AudioManager {
-public:
+  public:
     AudioManager();
     ~AudioManager();
 
     bool initialize(const std::string& engineSoundPath);
     void update(const Vehicle& vehicle);
 
-private:
+  private:
     void* engine_;
     void* engineSound_;
 

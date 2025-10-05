@@ -2,6 +2,7 @@
 #include <memory>
 #include <filesystem>
 #include <iostream>
+
 #include "vehicle.hpp"
 #include "vehicleRenderer.hpp"
 #include "sceneManager.hpp"
@@ -17,6 +18,7 @@ int main() {
     // Create scene manager
     SceneManager sceneManager;
     sceneManager.setupCamera(canvas.aspect());
+    sceneManager.setupRenderer(canvas.size());
     sceneManager.setupLighting();
     sceneManager.setupGround();
 

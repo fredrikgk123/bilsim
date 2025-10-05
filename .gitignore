@@ -28,14 +28,14 @@ cmake_install.cmake
 Makefile
 *.cmake
 !CMakeLists.txt
-!src/**/CMakeLists.txt
 
-# Downloaded dependencies (will be re-downloaded by CMake)
+# Downloaded dependencies
 _deps/
 
 # Generated files
 *.autosave
 *.user
+generated/
 
 # OS specific
 .DS_Store
@@ -43,4 +43,3 @@ Thumbs.db
 
 # Testing
 Testing/
-

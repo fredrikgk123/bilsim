@@ -3,7 +3,8 @@
 #include "audioManager.hpp"
 #include "vehicle.hpp"
 #include <iostream>
-// TODO, make noise more seamless
+
+// TODO: Make noise more seamless (loop point could be improved)
 
 AudioManager::AudioManager()
     : engine_(nullptr),
@@ -48,8 +49,8 @@ bool AudioManager::initialize(const std::string& engineSoundPath) {
 
     // Configure and start playback
     ma_sound_set_looping((ma_sound*)engineSound_, MA_TRUE);
-    ma_sound_set_volume((ma_sound*)engineSound_, 0.3f);
-    ma_sound_set_pitch((ma_sound*)engineSound_, 0.8f);
+    ma_sound_set_volume((ma_sound*)engineSound_, 0.3f);   // Start at 30% volume (idle)
+    ma_sound_set_pitch((ma_sound*)engineSound_, 0.8f);    // Start at 0.8x pitch (idle sound)
     ma_sound_start((ma_sound*)engineSound_);
 
     soundLoaded_ = true;
@@ -58,24 +59,31 @@ bool AudioManager::initialize(const std::string& engineSoundPath) {
 }
 
 void AudioManager::update(const Vehicle& vehicle) {
-    if (!initialized_ || !soundLoaded_) return;
+    if (!initialized_ || !soundLoaded_) {
+        return;
+    }
 
     float absVelocity = std::abs(vehicle.getVelocity());
 
-    // Update pitch based on speed
-    float pitch = calculateEnginePitch(absVelocity, 20.0f);
+    // Update pitch based on speed (simulates engine RPM)
+    float pitch = calculateEnginePitch(absVelocity, 20.0f);  // 20.0f is reference max speed for audio
     ma_sound_set_pitch((ma_sound*)engineSound_, pitch);
 
-    // Update volume based on speed
-    float volume = 0.3f + (absVelocity / 20.0f) * 0.5f;
-    if (volume > 0.8f) volume = 0.8f;
+    // Update volume based on speed (engine gets louder as it revs)
+    float volume = 0.3f + (absVelocity / 20.0f) * 0.5f;  // Range: 0.3 (idle) to 0.8 (full throttle)
+    if (volume > 0.8f) {
+        volume = 0.8f;  // Cap at 80% to avoid distortion
+    }
     ma_sound_set_volume((ma_sound*)engineSound_, volume);
 }
 
 float AudioManager::calculateEnginePitch(float velocity, float maxSpeed) const {
     float speedRatio = velocity / maxSpeed;
-    if (speedRatio > 1.0f) speedRatio = 1.0f;
+    if (speedRatio > 1.0f) {
+        speedRatio = 1.0f;
+    }
 
-    // Idle pitch: 0.8, Max pitch: 2.0
-    return 0.8f + (std::sqrt(speedRatio) * 1.2f);
+    // Pitch range: 0.8 (idle) to 2.0 (max RPM)
+    // Using square root for non-linear scaling - engine revs up quickly then plateaus
+    return 0.8f + (std::sqrt(speedRatio) * 1.2f);  // 1.2f is the pitch range (2.0 - 0.8)
 }
