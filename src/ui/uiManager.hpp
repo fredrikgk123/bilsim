@@ -1,8 +1,3 @@
-//
-// Created by Fredrik Karlsaune on 05/10/2025.
-//
+#pragma once
 
-#ifndef BILSIM_UIMANAGER_HPP
-#define BILSIM_UIMANAGER_HPP
-
-#endif //BILSIM_UIMANAGER_HPP
+// TODO: Implement UI manager

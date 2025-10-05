@@ -1,0 +1,49 @@
+### macOS / Linux
+```bash
+mkdir build
+cd build
+cmake ..
+make
+./bilsim
+```
+
+### Windows (Visual Studio)
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build . --config Release
+.\Release\bilsim.exe
+```
+
+## Controls
+- **W / UP Arrow** - Accelerate forward
+- **S / DOWN Arrow** - Accelerate backward
+- **A / LEFT Arrow** - Turn left
+- **D / RIGHT Arrow** - Turn right
+
+## Adding Engine Sound
+Place an engine sound file (WAV, MP3, or OGG) at:
+```
+assets/sounds/engine.wav
+```
+
+If no sound file is found, the simulator will run without audio.
+
+## Project Structure
+```
+src/
+  audio/       - Sound management (irrKlang)
+  core/        - Vehicle physics (backend)
+  graphics/    - 3D rendering (frontend)
+  input/       - Keyboard handling
+  ui/          - User interface
+```
+
+## Dependencies
+- **threepp** - 3D graphics library (auto-downloaded)
+- **irrKlang** - Audio library (auto-downloaded)
+
+## License
+Educational project for school assignment.
+

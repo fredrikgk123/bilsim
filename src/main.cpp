@@ -1,9 +1,12 @@
 #include <threepp/threepp.hpp>
 #include <memory>
+#include <filesystem>
+#include <iostream>
 #include "vehicle.hpp"
 #include "vehicleRenderer.hpp"
 #include "sceneManager.hpp"
 #include "inputHandler.hpp"
+#include "audioManager.hpp"
 
 using namespace threepp;
 
@@ -27,6 +30,38 @@ int main() {
     auto inputHandler = std::make_unique<InputHandler>(vehicle);
     canvas.addKeyListener(*inputHandler);
 
+    // Create audio manager and initialize engine sound
+    // Try multiple paths to find the audio file
+    AudioManager audioManager;
+    bool audioEnabled = false;
+
+    std::vector<std::string> possiblePaths = {
+        "src/audio/carnoise.wav",           // When run from project root
+        "../src/audio/carnoise.wav",        // When run from build directory
+        "../../src/audio/carnoise.wav",     // When run from nested build dir
+        "carnoise.wav"                      // When audio file is copied to executable location
+    };
+
+    for (const auto& path : possiblePaths) {
+        if (std::filesystem::exists(path)) {
+            std::cout << "Attempting to load audio from: " << path << std::endl;
+            audioEnabled = audioManager.initialize(path);
+            if (audioEnabled) {
+                std::cout << "Audio successfully loaded!" << std::endl;
+                break;
+            }
+        }
+    }
+
+    if (!audioEnabled) {
+        std::cout << "No audio file found. Checked paths:" << std::endl;
+        for (const auto& path : possiblePaths) {
+            std::cout << "  - " << path << " (exists: "
+                      << (std::filesystem::exists(path) ? "yes" : "no") << ")" << std::endl;
+        }
+        std::cout << "Continuing without audio..." << std::endl;
+    }
+
     // Handle window resize
     canvas.onWindowResize([&](WindowSize size) {
         sceneManager.resize(size);
@@ -43,6 +78,11 @@ int main() {
 
         // Update renderer
         vehicleRenderer.update();
+
+        // Update audio based on vehicle state
+        if (audioEnabled) {
+            audioManager.update(vehicle);
+        }
 
         // Render the scene
         sceneManager.getRenderer().render(sceneManager.getScene(), sceneManager.getCamera());
