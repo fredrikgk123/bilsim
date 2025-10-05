@@ -3,15 +3,15 @@
 
 Vehicle::Vehicle(float x, float y, float z)
     : position_({x, y, z}),
-      initialPosition_({x, y, z}),  // Store initial position for reset
+      initialPosition_({x, y, z}),
       rotation_(0.0f),
       velocity_(0.0f),
       acceleration_(0.0f),
-      maxSpeed_(25.0f),              // Maximum speed in units/second - tuned for responsive but controllable gameplay
-      turnSpeed_(2.0f),               // Radians per second - allows ~115° turn per second for arcade-style handling
-      forwardAcceleration_(12.0f),   // Units/s² - quick acceleration for responsive feel
-      backwardAcceleration_(-6.0f),  // Half of forward - vehicles naturally reverse slower than they accelerate forward
-      size_({1.0f, 0.5f, 2.0f}) {    // Default size: width, height, length
+      maxSpeed_(25.0f),                  // 25 units/sec - balanced for responsive but controllable gameplay
+      turnSpeed_(2.0f),                  // 2 radians/sec (~115°/sec) - arcade-style handling
+      forwardAcceleration_(12.0f),       // 12 units/sec² - reaches max speed in ~2 seconds
+      backwardAcceleration_(-6.0f),      // Half of forward - vehicles reverse slower than they accelerate
+      size_({1.0f, 0.5f, 2.0f}) {        // Width=1, Height=0.5, Length=2 - compact car proportions
 }
 
 void Vehicle::accelerateForward() {
@@ -23,7 +23,6 @@ void Vehicle::accelerateBackward() {
 }
 
 void Vehicle::turn(float amount) {
-    // Calculate speed-dependent turn rate
     float turnRate = calculateTurnRate();
     rotation_ += amount * turnSpeed_ * turnRate;
 
@@ -37,60 +36,46 @@ void Vehicle::turn(float amount) {
 }
 
 float Vehicle::calculateTurnRate() const {
-    // Get absolute velocity
     float absVelocity = std::abs(velocity_);
+    const float minTurnSpeed = 0.1f;   // 0.1 units/sec minimum - prevents spinning in place (realistic)
 
-    // If nearly stopped, don't turn at all (prevents unrealistic spinning in place)
-    const float minTurnSpeed = 0.1f;  // Minimum speed needed to turn - simulates real vehicle physics
+    // Don't turn if nearly stopped
     if (absVelocity < minTurnSpeed) {
         return 0.0f;
     }
 
-    // Calculate turn rate as a proportion of current speed to max speed
-    // At low speeds: turns slowly (e.g., 0.2x normal turn rate)
-    // At high speeds: turns at full rate (1.0x normal turn rate)
+    // Turn rate scales with speed (using square root for smooth curve)
     float speedRatio = absVelocity / maxSpeed_;
+    float turnRate = std::sqrt(speedRatio);  // Square root gives good control at medium speeds
 
-    // Use a square root curve for smooth transition - provides good turning at medium speeds
-    // while still requiring some speed to turn effectively (more realistic than linear)
-    float turnRate = std::sqrt(speedRatio);
-
-    // Clamp between 0 and 1
-    if (turnRate > 1.0f) {
-        turnRate = 1.0f;
-    }
-
-    return turnRate;
+    return turnRate > 1.0f ? 1.0f : turnRate;
 }
 
 void Vehicle::update(float deltaTime) {
     // Update velocity based on acceleration
     velocity_ += acceleration_ * deltaTime;
 
-    // Apply basic friction (0.994^60 ≈ 0.74 after 1 second at 60fps)
-    // This creates natural deceleration when not accelerating
-    velocity_ *= 0.994f;
+    // Apply friction
+    velocity_ *= 0.994f;  // 0.994^60 ≈ 0.74 after 1 second at 60fps - natural deceleration
 
-    // Clamp velocity to maximum speeds
+    // Clamp velocity to max speeds
     if (velocity_ > maxSpeed_) {
         velocity_ = maxSpeed_;
-    } else if (velocity_ < -maxSpeed_ / 2) {
-        velocity_ = -maxSpeed_ / 2;  // Reverse speed is half of forward - realistic constraint
+    } else if (velocity_ < -maxSpeed_ / 2) {  // Reverse is half speed - realistic constraint
+        velocity_ = -maxSpeed_ / 2;
     }
 
     // Update position based on velocity and rotation
-    // Uses standard 2D rotation math (sin for x-axis, cos for z-axis in 3D space)
     float dx = std::sin(rotation_) * velocity_ * deltaTime;
     float dz = std::cos(rotation_) * velocity_ * deltaTime;
     position_[0] += dx;
     position_[2] += dz;
 
-    // Reset acceleration (input must be applied each frame)
+    // Reset acceleration (must be reapplied each frame)
     acceleration_ = 0.0f;
 }
 
 void Vehicle::reset() {
-    // Reset to initial state
     position_ = initialPosition_;
     rotation_ = 0.0f;
     velocity_ = 0.0f;
@@ -111,16 +96,4 @@ std::vector<float> Vehicle::getSize() const {
 
 float Vehicle::getVelocity() const {
     return velocity_;
-}
-
-bool Vehicle::checkCollision(const std::vector<float>& objectPosition, float objectRadius) const {
-    // Simple sphere-based collision detection
-    float dx = position_[0] - objectPosition[0];
-    float dy = position_[1] - objectPosition[1];
-    float dz = position_[2] - objectPosition[2];
-    float distance = std::sqrt(dx * dx + dy * dy + dz * dz);
-
-    // Calculate bounding sphere radius from vehicle dimensions
-    float boundingSphere = std::sqrt(size_[0] * size_[0] + size_[1] * size_[1] + size_[2] * size_[2]) / 2;
-    return distance < (boundingSphere + objectRadius);
 }

@@ -11,7 +11,7 @@ public:
     void accelerateBackward();
     void turn(float amount);
     void update(float deltaTime);
-    void reset(); // Reset vehicle to initial position and state
+    void reset();
 
     // Getters
     std::vector<float> getPosition() const;
@@ -19,21 +19,18 @@ public:
     std::vector<float> getSize() const;
     float getVelocity() const;
 
-    // Basic collision detection
-    bool checkCollision(const std::vector<float>& objectPosition, float objectRadius) const;
-
 private:
-    // Helper function to calculate turn rate based on speed
+    // Calculate turn rate based on current speed
     float calculateTurnRate() const;
 
-    std::vector<float> position_;       // x, y, z
-    std::vector<float> initialPosition_; // Store initial position for reset
-    float rotation_;                   // in radians
-    float velocity_;                   // current speed
-    float acceleration_;               // current acceleration
-    float maxSpeed_;                   // maximum speed
-    float turnSpeed_;                  // how fast the vehicle can turn
-    float forwardAcceleration_;        // forward acceleration amount
-    float backwardAcceleration_;       // backward acceleration amount
-    std::vector<float> size_;          // width, height, length
+    std::vector<float> position_;           // x, y, z coordinates
+    std::vector<float> initialPosition_;    // For reset functionality
+    float rotation_;                         // In radians
+    float velocity_;                         // Current speed
+    float acceleration_;                     // Current acceleration
+    float maxSpeed_;                         // Maximum forward speed
+    float turnSpeed_;                        // Turn rate
+    float forwardAcceleration_;             // Forward acceleration rate
+    float backwardAcceleration_;            // Backward acceleration rate
+    std::vector<float> size_;               // Width, height, length
 };

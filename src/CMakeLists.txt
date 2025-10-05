@@ -12,8 +12,3 @@ target_link_libraries(bilsim PUBLIC
         ui
         audio
 )
-
-# Copy audio file to build directory
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/carnoise.wav
-               ${CMAKE_CURRENT_BINARY_DIR}/carnoise.wav
-               COPYONLY)

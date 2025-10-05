@@ -1,14 +1,17 @@
 #include "inputHandler.hpp"
-#include <cmath>
 
 using namespace threepp;
 
 InputHandler::InputHandler(Vehicle& vehicle)
-    : vehicle_(vehicle) {
+    : vehicle_(vehicle),
+      upPressed_(false),
+      downPressed_(false),
+      leftPressed_(false),
+      rightPressed_(false) {
 }
 
 void InputHandler::onKeyPressed(KeyEvent evt) {
-    // Handle both arrow keys and WASD for accessibility
+    // Support both arrow keys and WASD
     switch (evt.key) {
         case Key::UP:
         case Key::W:
@@ -27,7 +30,6 @@ void InputHandler::onKeyPressed(KeyEvent evt) {
             rightPressed_ = true;
             break;
         case Key::R:
-            // Reset vehicle to initial position and state
             vehicle_.reset();
             break;
         default:
@@ -66,8 +68,7 @@ void InputHandler::update(float deltaTime) {
         vehicle_.accelerateBackward();
     }
 
-    // Handle turning with speed-dependent rate (implemented in Vehicle class)
-    // Reverse steering when moving backwards for realistic feel
+    // Handle turning (reverse when moving backwards)
     float turnDirection = (vehicle_.getVelocity() >= 0) ? 1.0f : -1.0f;
 
     if (leftPressed_) {

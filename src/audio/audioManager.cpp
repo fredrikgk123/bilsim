@@ -3,8 +3,7 @@
 #include "audioManager.hpp"
 #include "vehicle.hpp"
 #include <iostream>
-
-// TODO: Make noise more seamless (loop point could be improved)
+#include <cmath>
 
 AudioManager::AudioManager()
     : engine_(nullptr),
@@ -28,7 +27,7 @@ AudioManager::~AudioManager() {
 bool AudioManager::initialize(const std::string& engineSoundPath) {
     // Initialize audio engine
     engine_ = new ma_engine();
-    if (ma_engine_init(NULL, (ma_engine*)engine_) != MA_SUCCESS) {
+    if (ma_engine_init(nullptr, (ma_engine*)engine_) != MA_SUCCESS) {
         std::cerr << "Failed to initialize audio engine" << std::endl;
         delete (ma_engine*)engine_;
         engine_ = nullptr;
@@ -36,21 +35,21 @@ bool AudioManager::initialize(const std::string& engineSoundPath) {
     }
     initialized_ = true;
 
-    // Load sound file
+    // Load engine sound file
     engineSound_ = new ma_sound();
     if (ma_sound_init_from_file((ma_engine*)engine_, engineSoundPath.c_str(),
                                  MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
-                                 NULL, NULL, (ma_sound*)engineSound_) != MA_SUCCESS) {
+                                 nullptr, nullptr, (ma_sound*)engineSound_) != MA_SUCCESS) {
         std::cout << "Engine sound not found at: " << engineSoundPath << std::endl;
         delete (ma_sound*)engineSound_;
         engineSound_ = nullptr;
         return false;
     }
 
-    // Configure and start playback
+    // Configure sound playback
     ma_sound_set_looping((ma_sound*)engineSound_, MA_TRUE);
-    ma_sound_set_volume((ma_sound*)engineSound_, 0.3f);   // Start at 30% volume (idle)
-    ma_sound_set_pitch((ma_sound*)engineSound_, 0.8f);    // Start at 0.8x pitch (idle sound)
+    ma_sound_set_volume((ma_sound*)engineSound_, 0.3f);  // 0.3 = 30% - idle engine volume (quiet)
+    ma_sound_set_pitch((ma_sound*)engineSound_, 0.8f);   // 0.8 = 80% speed - lower pitch for idle
     ma_sound_start((ma_sound*)engineSound_);
 
     soundLoaded_ = true;
@@ -66,13 +65,13 @@ void AudioManager::update(const Vehicle& vehicle) {
     float absVelocity = std::abs(vehicle.getVelocity());
 
     // Update pitch based on speed (simulates engine RPM)
-    float pitch = calculateEnginePitch(absVelocity, 20.0f);  // 20.0f is reference max speed for audio
+    float pitch = calculateEnginePitch(absVelocity, 20.0f);  // 20.0 reference speed - tuned for good audio response
     ma_sound_set_pitch((ma_sound*)engineSound_, pitch);
 
-    // Update volume based on speed (engine gets louder as it revs)
+    // Update volume based on speed
     float volume = 0.3f + (absVelocity / 20.0f) * 0.5f;  // Range: 0.3 (idle) to 0.8 (full throttle)
-    if (volume > 0.8f) {
-        volume = 0.8f;  // Cap at 80% to avoid distortion
+    if (volume > 0.8f) {  // 0.8 cap - prevents audio distortion
+        volume = 0.8f;
     }
     ma_sound_set_volume((ma_sound*)engineSound_, volume);
 }
@@ -84,6 +83,5 @@ float AudioManager::calculateEnginePitch(float velocity, float maxSpeed) const {
     }
 
     // Pitch range: 0.8 (idle) to 2.0 (max RPM)
-    // Using square root for non-linear scaling - engine revs up quickly then plateaus
-    return 0.8f + (std::sqrt(speedRatio) * 1.2f);  // 1.2f is the pitch range (2.0 - 0.8)
+    return 0.8f + (std::sqrt(speedRatio) * 1.2f);  // 1.2 range (2.0 - 0.8) - square root creates realistic RPM curve
 }

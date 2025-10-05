@@ -4,18 +4,21 @@
 #include "vehicle.hpp"
 
 class InputHandler : public threepp::KeyListener {
-  public:
-    InputHandler(Vehicle& vehicle);
+public:
+    explicit InputHandler(Vehicle& vehicle);
 
     void onKeyPressed(threepp::KeyEvent evt) override;
     void onKeyReleased(threepp::KeyEvent evt) override;
 
+    // Apply input to vehicle
     void update(float deltaTime);
 
-  private:
+private:
     Vehicle& vehicle_;
-    bool upPressed_    = false;
-    bool downPressed_  = false;
-    bool leftPressed_  = false;
-    bool rightPressed_ = false;
+
+    // Key state tracking
+    bool upPressed_;
+    bool downPressed_;
+    bool leftPressed_;
+    bool rightPressed_;
 };

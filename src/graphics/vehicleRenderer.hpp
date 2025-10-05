@@ -5,15 +5,14 @@
 #include "sceneManager.hpp"
 
 class VehicleRenderer {
-
-  public:
+public:
     VehicleRenderer(SceneManager& sceneManager, const Vehicle& vehicle);
     ~VehicleRenderer();
 
+    // Update visual representation to match vehicle state
     void update();
-    void setColor(const threepp::Color& color);
 
-  private:
+private:
     void createVehicleModel();
 
     SceneManager& sceneManager_;
