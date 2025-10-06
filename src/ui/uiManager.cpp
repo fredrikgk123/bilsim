@@ -153,8 +153,8 @@ void UIManager::createSevenSegmentDigit(float xPos, float yPos, int digitIndex) 
 
 void UIManager::updateSpeedometer(float speed) {
     // Calculate speed display
-    float maxSpeed = 250.0f;  // 250 km/h - high enough for max vehicle speed display
-    float displaySpeed = std::abs(speed) * 10.0f;  // *10 converts units/sec to km/h (tuned scale)
+    float maxSpeed = 150.0f;  // 150 km/h - matches vehicle's real max speed
+    float displaySpeed = std::abs(speed) * 3.6f;  // 1 unit/sec = 3.6 km/h
     float speedRatio = displaySpeed / maxSpeed;
 
     // Clamp to 0-1 range

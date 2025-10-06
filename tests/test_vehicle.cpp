@@ -98,9 +98,11 @@ TEST_CASE("Vehicle turning", "[vehicle]") {
     SECTION("Turning changes rotation") {
         float initialRotation = vehicle.getRotation();
 
-        // Need some velocity to turn
-        vehicle.accelerateForward();
-        vehicle.update(0.1f);
+        // Accelerate until velocity exceeds MIN_TURN_SPEED
+        while (vehicle.getVelocity() < 0.51f) {
+            vehicle.accelerateForward();
+            vehicle.update(0.1f);
+        }
 
         vehicle.turn(0.1f);
 
@@ -162,4 +164,3 @@ TEST_CASE("Vehicle movement", "[vehicle]") {
         REQUIRE(positionChanged == true);
     }
 }
-

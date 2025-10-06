@@ -3,14 +3,14 @@
 
 // Anonymous namespace - these constants are LOCAL to this file only (NOT global!)
 namespace {
-    // Physics constants
-    const float MAX_SPEED = 25.0f;                  // 25 units/sec - balanced for responsive but controllable gameplay
-    const float MAX_REVERSE_SPEED = 12.5f;          // Half of forward - vehicles reverse slower
-    const float TURN_SPEED = 2.0f;                  // 2 radians/sec (~115°/sec) - arcade-style handling
-    const float FORWARD_ACCELERATION = 12.0f;       // 12 units/sec² - reaches max speed in ~2 seconds
-    const float BACKWARD_ACCELERATION = -6.0f;      // Half of forward - vehicles reverse slower than they accelerate
-    const float FRICTION_COEFFICIENT = 0.994f;      // 0.994^60 ≈ 0.74 after 1 second at 60fps - natural deceleration
-    const float MIN_TURN_SPEED = 0.1f;              // 0.1 units/sec minimum - prevents spinning in place (realistic)
+    // Physics constants (realistic tuning)
+    const float MAX_SPEED = 41.67f;                  // ~150 km/h (realistic for a small car)
+    const float MAX_REVERSE_SPEED = 13.9f;           // ~50 km/h reverse
+    const float TURN_SPEED = 1.0f;                  // 1 rad/sec (~57°/sec)
+    const float FORWARD_ACCELERATION = 8.0f;        // Balanced acceleration
+    const float BACKWARD_ACCELERATION = -4.0f;      // Slower reverse acceleration
+    const float FRICTION_COEFFICIENT = 0.997f;      // More friction for tighter control
+    const float MIN_TURN_SPEED = 0.5f;              // Prevents spinning at very low speed
 
     // Vehicle dimensions
     const float VEHICLE_WIDTH = 1.0f;
@@ -50,16 +50,42 @@ void Vehicle::turn(float amount) {
 float Vehicle::calculateTurnRate() const {
     float absVelocity = std::abs(velocity_);
 
-    // Don't turn if nearly stopped
-    if (absVelocity < MIN_TURN_SPEED) {
+    // Don't turn if completely stopped
+    if (absVelocity < 0.1f) {
         return 0.0f;
     }
 
-    // Turn rate scales with speed (using square root for smooth curve)
-    float speedRatio = absVelocity / MAX_SPEED;
-    float turnRate = std::sqrt(speedRatio);
+    // Extremely low speeds (0.1-0.3 m/s / ~0.4-1.1 km/h): very minimal turning
+    // Almost stopped - barely any turning ability
+    if (absVelocity < 0.3f) {
+        // Linear scaling from 0.05 at 0.1 m/s to 0.15 at 0.3 m/s
+        float turnRate = 0.05f + ((absVelocity - 0.1f) / 0.2f) * 0.1f;
+        return turnRate;
+    }
 
-    // Clamp to maximum of 1.0
+    // Very low speeds (0.3-3 m/s / ~1.1-11 km/h): minimal but usable turning
+    // This allows parking-speed maneuvers
+    if (absVelocity < 3.0f) {
+        // Linear scaling from 0.15 at 0.3 m/s to 0.5 at 3 m/s
+        float turnRate = 0.15f + ((absVelocity - 0.3f) / 2.7f) * 0.35f;
+        return turnRate;
+    }
+
+    // Low to medium speeds (3-15 m/s / ~11-54 km/h): good turning capability
+    if (absVelocity < 15.0f) {
+        // Linear scaling from 0.5 at 3 m/s to 1.0 at 15 m/s
+        float turnRate = 0.5f + ((absVelocity - 3.0f) / 12.0f) * 0.5f;
+        return turnRate;
+    }
+
+    // High speeds (15+ m/s / 54+ km/h): reduced turn rate for realism
+    float speedRatio = (absVelocity - 15.0f) / (MAX_SPEED - 15.0f);
+    float turnRate = 1.0f - (speedRatio * 0.4f);  // Reduces to 60% at max speed
+
+    // Clamp to reasonable range
+    if (turnRate < 0.6f) {
+        turnRate = 0.6f;
+    }
     if (turnRate > 1.0f) {
         turnRate = 1.0f;
     }
