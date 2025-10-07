@@ -13,12 +13,14 @@ namespace {
     const float MINIMAP_HEIGHT = 50.0f;           // 50 units high - bird's eye view
 
     // Ground/Grid constants
-    const float GROUND_SIZE = 50.0f;              // 50x50 units - large enough for driving around
-    const int GRID_DIVISIONS = 50;                // 50 divisions - 1 unit per grid square
+    const float GROUND_SIZE = 200.0f;             // 200x200 units - large play area
+    const int GRID_DIVISIONS = GROUND_SIZE;       // Same as ground size - 1 unit per grid square
     const float GRID_Z_OFFSET = 0.01f;            // 0.01 units above ground - prevents z-fighting flickering
 
     // Camera constants
     const float CAMERA_FOV = 75.0f;               // FOV=75° (wide for awareness)
+    const float NITROUS_FOV = 90.0f;              // FOV=90° during nitrous boost (wider = faster feel)
+    const float FOV_LERP_SPEED = 0.05f;           // Smooth FOV transitions
     const float CAMERA_NEAR = 0.1f;
     const float CAMERA_FAR = 1000.0f;
 
@@ -27,13 +29,17 @@ namespace {
     const float AMBIENT_INTENSITY = 1.0f;
     const unsigned int DIRECTIONAL_COLOR = 0xffffff;
     const float DIRECTIONAL_INTENSITY = 0.8f;     // 80% intensity - bright but not blown out
-    const float SHADOW_AREA_SIZE = 50.0f;         // Shadow area: 100x100 units
+    const float SHADOW_AREA_SIZE = 200.0f;        // Shadow area: 400x400 units (covers entire play area)
 }
 
 SceneManager::SceneManager()
     : cameraDistance_(DEFAULT_CAMERA_DISTANCE),
       cameraHeight_(DEFAULT_CAMERA_HEIGHT),
       cameraLerpSpeed_(DEFAULT_CAMERA_LERP_SPEED),
+      baseFOV_(CAMERA_FOV),
+      currentFOV_(CAMERA_FOV),
+      targetFOV_(CAMERA_FOV),
+      fovLerpSpeed_(FOV_LERP_SPEED),
       currentCameraX_(0.0f),
       currentCameraY_(DEFAULT_CAMERA_HEIGHT),
       currentCameraZ_(DEFAULT_CAMERA_DISTANCE),
@@ -127,6 +133,24 @@ void SceneManager::updateCameraFollowTarget(float targetX, float targetY, float 
     camera_->lookAt(Vector3(currentLookAtX_, currentLookAtY_, currentLookAtZ_));
 }
 
+void SceneManager::updateMinimapCamera(float targetX, float targetZ) {
+    // Keep minimap centered on vehicle
+    minimapCamera_->position.set(targetX, MINIMAP_HEIGHT, targetZ);
+    minimapCamera_->lookAt(Vector3(targetX, 0, targetZ));
+}
+
+void SceneManager::updateCameraFOV(bool nitrousActive) {
+    // Set target FOV based on nitrous state
+    targetFOV_ = nitrousActive ? NITROUS_FOV : baseFOV_;
+
+    // Smoothly interpolate current FOV to target
+    currentFOV_ = currentFOV_ + ((targetFOV_ - currentFOV_) * fovLerpSpeed_);
+
+    // Apply FOV to camera
+    camera_->fov = currentFOV_;
+    camera_->updateProjectionMatrix();
+}
+
 void SceneManager::render() {
     renderer_->render(*scene_, *camera_);
 }
@@ -148,12 +172,6 @@ void SceneManager::setupMinimapCamera(float aspectRatio) {
     // Position camera above scene looking down
     minimapCamera_->position.set(0, MINIMAP_HEIGHT, 0);
     minimapCamera_->lookAt(Vector3(0, 0, 0));
-}
-
-void SceneManager::updateMinimapCamera(float targetX, float targetZ) {
-    // Keep minimap centered on vehicle
-    minimapCamera_->position.set(targetX, MINIMAP_HEIGHT, targetZ);
-    minimapCamera_->lookAt(Vector3(targetX, 0, targetZ));
 }
 
 void SceneManager::renderMinimap() {

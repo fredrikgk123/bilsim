@@ -18,8 +18,8 @@ TEST_CASE("Vehicle initialization", "[vehicle]") {
         REQUIRE(vehicle.getVelocity() == 0.0f);
     }
 
-    SECTION("Initial rotation is zero") {
-        REQUIRE(vehicle.getRotation() == 0.0f);
+    SECTION("Initial rotation is 180 degrees (PI radians)") {
+        REQUIRE(vehicle.getRotation() == Approx(3.14159f).epsilon(0.0001));
     }
 }
 
@@ -140,8 +140,8 @@ TEST_CASE("Vehicle reset", "[vehicle]") {
         REQUIRE(vehicle.getVelocity() == 0.0f);
     }
 
-    SECTION("Rotation returns to zero") {
-        REQUIRE(vehicle.getRotation() == 0.0f);
+    SECTION("Rotation returns to initial 180 degrees (PI radians)") {
+        REQUIRE(vehicle.getRotation() == Approx(3.14159f).epsilon(0.0001));
     }
 }
 

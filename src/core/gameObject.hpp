@@ -34,6 +34,7 @@ protected:
     std::array<float, 3> position_;
     std::array<float, 3> initialPosition_;
     float rotation_;
+    float initialRotation_;  // Store initial rotation for reset
 
     // Size for collision detection (width, height, length)
     std::array<float, 3> size_;
@@ -41,4 +42,3 @@ protected:
     // Active state (for object pooling and visibility)
     bool active_;
 };
-

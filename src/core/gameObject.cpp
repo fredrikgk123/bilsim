@@ -5,13 +5,14 @@ GameObject::GameObject(float x, float y, float z)
     : position_({x, y, z}),
       initialPosition_({x, y, z}),
       rotation_(0.0f),
+      initialRotation_(0.0f),
       size_({1.0f, 1.0f, 1.0f}),
       active_(true) {
 }
 
 void GameObject::reset() {
     position_ = initialPosition_;
-    rotation_ = 0.0f;
+    rotation_ = initialRotation_;
     active_ = true;
 }
 
@@ -68,4 +69,3 @@ bool GameObject::intersects(const GameObject& other) const {
 
     return overlapX && overlapZ;
 }
-

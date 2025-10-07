@@ -22,6 +22,7 @@ public:
     // Camera control
     void updateCameraFollowTarget(float targetX, float targetY, float targetZ, float targetRotation);
     void updateMinimapCamera(float targetX, float targetZ);
+    void updateCameraFOV(bool nitrousActive);  // Dynamic FOV for speed effect
 
     // Rendering
     void render();
@@ -39,6 +40,12 @@ private:
     float cameraDistance_;
     float cameraHeight_;
     float cameraLerpSpeed_;
+
+    // FOV parameters
+    float baseFOV_;
+    float currentFOV_;
+    float targetFOV_;
+    float fovLerpSpeed_;
 
     // Current camera state for smooth interpolation
     float currentCameraX_;

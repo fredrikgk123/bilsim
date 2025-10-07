@@ -1,5 +1,7 @@
 # Bilsimulator
 
+**Kandidatnummer:** [LEGG INN DITT KANDIDATNUMMER HER]
+
 A 3D vehicle simulator built with modern C++ and threepp, featuring realistic physics, dynamic audio, and a clean architecture designed for extensibility.
 
 ## Overview
@@ -109,6 +111,85 @@ tests/
 ├── test_gameObject.cpp    # Base class tests
 └── test_collision.cpp     # AABB collision tests
 ```
+
+### UML Class Diagram
+
+```
+┌─────────────────────────┐
+│      GameObject         │ (abstract)
+├─────────────────────────┤
+│ - position_: array<3>   │
+│ - rotation_: float      │
+│ - size_: array<3>       │
+│ - active_: bool         │
+├─────────────────────────┤
+│ + update(dt): void      │ (pure virtual)
+│ + reset(): void         │
+│ + intersects(obj): bool │
+│ + getPosition(): array  │
+│ + setActive(b): void    │
+└───────────┬─────────────┘
+            │
+      ┌─────┴──────┐
+      │            │
+┌─────▼──────┐ ┌──▼────────┐
+│  Vehicle   │ │  Powerup  │
+├────────────┤ ├───────────┤
+│ - velocity_│ │ - type_   │
+│ - accel_   │ │           │
+├────────────┤ ├───────────┤
+│ + accel()  │ │ + update()│
+│ + turn()   │ │           │
+└────────────┘ └───────────┘
+
+
+┌─────────────────��────────┐
+│  GameObjectRenderer      │ (abstract)
+├──────────────────────────┤
+│ - scene_: Scene&         │
+│ - gameObject_: GameObject&│
+│ - objectGroup_: Group*   │
+├──────────────────────────┤
+│ + update(): void         │
+│ # createModel(): void    │ (virtual)
+└────────────┬─────────────┘
+             │
+      ┌──────┴────────┐
+      │               │
+┌─────▼────────┐ ┌───▼────────────┐
+│VehicleRenderer│ │PowerupRenderer │
+├──────────────┤ ├────────────────┤
+│# createModel()│ │# createModel() │
+└──────────────┘ └────────────────┘
+
+
+┌────────────────┐     ┌─────────────┐
+│ SceneManager   │     │InputHandler │
+├────────────────┤     ├─────────────┤
+│ - scene_       │     │ - vehicle_& │
+│ - camera_      │     │ - keyStates │
+│ - renderer_    │     ├─────────────┤
+├────────────────┤     │ + onKey()   │
+│ + setupScene() │     │ + update()  │
+│ + render()     │     └─────────────┘
+└────────────────┘
+
+┌─────────────┐     ┌────────────┐
+│AudioManager │     │ UIManager  │
+├─────────────┤     ├─────────────┤
+│ - engine_*  │     │ - renderer_│
+│ - sound_*   │     │ - hudScene_│
+├─────────────┤     ├─────────────┤
+│ + update()  │     │ + render() │
+└─────────────┘     └─────────────┘
+```
+
+**Relationships:**
+- Vehicle/Powerup **inherit from** GameObject
+- VehicleRenderer/PowerupRenderer **inherit from** GameObjectRenderer
+- InputHandler **holds reference to** Vehicle
+- All managers are **independent** with minimal coupling
+- Core module has **no dependencies** on graphics/ui/audio
 
 ## Testing
 
@@ -231,3 +312,212 @@ This project was created as a learning exercise. Feel free to use and modify for
 - **threepp** by [@markaren](https://github.com/markaren) - 3D rendering library
 - **Catch2** by [@catchorg](https://github.com/catchorg) - Testing framework
 - **miniaudio** by [@mackron](https://github.com/mackron) - Audio library
+
+---
+
+## Refleksjon (Reflection)
+
+### Hva jeg er fornøyd med (What I'm satisfied with)
+
+#### 1. Arkitektur og designprinsipper
+Jeg er særlig stolt av hvordan prosjektet følger god programvarearkitektur. Den strenge separasjonen mellom `core/` (logikk) og `graphics/` (visualisering) gjør at:
+- Core-modulen kan testes helt uten å initialisere OpenGL
+- Nye renderere kan lages uten å endre spillogikken
+- Koden følger Dependency Inversion Principle - core avhenger ikke av grafikk
+
+Dette demonstreres tydelig i at alle unit tests kjører på core-modulen uten noen grafikk-avhengigheter.
+
+#### 2. Moderne C++20 praksis
+Konsekvent bruk av moderne C++ features:
+```cpp
+// Smart pointers - automatic memory management
+std::unique_ptr<Vehicle> vehicle_;           // Eierskap
+std::shared_ptr<Scene> scene_;              // Delt eierskap
+const Vehicle& vehicle_;                     // Ikke-eiende referanse
+
+// RAII - ingen manuell cleanup
+~AudioManager() = default;  // unique_ptr håndterer alt
+
+// Anonymous namespaces - ikke globale variabler
+namespace {
+    const float MAX_SPEED = 41.67f;  // File-local
+}
+```
+
+Dette eliminerer memory leaks og gjør koden tryggere og mer vedlikeholdbar.
+
+#### 3. Testbarhet
+20 unit tests med 100% pass rate. Alle kritiske komponenter (Vehicle, GameObject, collision detection) er grundig testet. Catch2 framework gjør testene lesbare og lette å utvide.
+
+#### 4. Fysikk-simulering
+Realistisk kjørefølelse med:
+- Hastighetsavhengig svingradius (bil spinner ikke på stedet ved lav hastighet)
+- Eksponensiell friksjon
+- Momentum-bevaring
+- Smooth camera interpolation (lerp)
+
+#### 5. UI implementasjon
+Custom 7-segment display for speedometer uten eksterne UI-biblioteker. Dette viser forståelse for hvordan 3D-grafikk kan brukes kreativt for UI-elementer.
+
+### Hva som kunne vært bedre (What could be improved)
+
+#### 1. Manglende obstacles/hindringer
+**Problem:** Kravspesifikasjonen nevner "Hindringer, fare-elementer, dører, portaler o.l." under Miljø, men dette er ikke implementert.
+
+**Hvordan løse:**
+```cpp
+// 1. Lag src/core/obstacle.hpp
+class Obstacle : public GameObject {
+public:
+    Obstacle(float x, float y, float z, float w, float h, float l);
+    void update(float deltaTime) override;  // Statisk, gjør ingenting
+};
+
+// 2. Lag src/graphics/obstacleRenderer.hpp
+class ObstacleRenderer : public GameObjectRenderer {
+protected:
+    void createModel() override;  // Tegn vegg/hindring
+};
+
+// 3. I main.cpp: Håndter kollisjon
+if (vehicle.intersects(obstacle)) {
+    // Push vehicle back basert på collision normal
+    // Eller implementer en CollisionManager
+}
+```
+
+**Teknisk innsikt:** GameObject-hierarkiet er allerede designet for dette (Open/Closed Principle), så det ville vært rett frem å legge til.
+
+#### 2. Begrenset feilhåndtering
+**Problem:** Koden har minimal error handling:
+```cpp
+bool audioEnabled = audioManager.initialize("carnoise.wav");
+// Fortsetter uten audio hvis fil mangler
+```
+
+**Forbedring:**
+- Parameter-validering i funksjoner (sjekk for nullptr, ugyldige verdier)
+- Exception handling for kritiske feil
+- Boundary checking på vektorer før tilgang
+- Assert statements for debug builds
+
+**Hvordan:**
+```cpp
+void Vehicle::setPosition(float x, float y, float z) {
+    // Validate input
+    if (std::isnan(x) || std::isnan(y) || std::isnan(z)) {
+        throw std::invalid_argument("Position contains NaN");
+    }
+    position_ = {x, y, z};
+}
+```
+
+#### 3. Test coverage kun på core-modulen
+**Problem:** Graphics, audio, input og ui-modulene har ingen unit tests.
+
+**Hvorfor:** Disse modulene er vanskeligere å teste fordi de avhenger av eksterne systemer (OpenGL, audio devices, keyboard).
+
+**Løsning:**
+- Integration tests som starter hele applikasjonen
+- Mock objects for å teste input/audio uten faktisk hardware
+- Renderer tests med headless OpenGL context
+
+#### 4. Manglende CI/CD pipeline
+**Problem:** Ingen GitHub Actions workflow for automatisk bygging og testing.
+
+**Hvordan implementere:**
+```yaml
+# .github/workflows/build-and-test.yml
+name: Build and Test
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: |
+          cmake -B build
+          cmake --build build
+      - name: Test
+        run: cd build && ctest --output-on-failure
+```
+
+**Fordel:** Verifiserer cross-platform kompatibilitet automatisk.
+
+#### 5. Main.cpp er for stor
+**Problem:** main.cpp inneholder mye game loop logikk (~150 linjer).
+
+**Bedre design:**
+```cpp
+// src/core/game.hpp
+class Game {
+public:
+    void initialize();
+    void run();
+    void update(float deltaTime);
+    void render();
+private:
+    std::unique_ptr<Vehicle> vehicle_;
+    std::vector<std::unique_ptr<Powerup>> powerups_;
+    std::unique_ptr<SceneManager> sceneManager_;
+    // ... etc
+};
+
+// main.cpp blir da bare:
+int main() {
+    Game game;
+    game.run();
+    return 0;
+}
+```
+
+**Fordel:** Lettere å teste, bedre Single Responsibility Principle.
+
+### Teknisk innsikt i valgte løsninger
+
+#### Hvorfor GameObject som abstrakt baseklasse?
+Dette følger **Template Method pattern** og gjør at collision detection fungerer polymorfisk:
+```cpp
+bool GameObject::intersects(const GameObject& other) const {
+    // Fungerer for Vehicle, Powerup, eller fremtidige typer!
+}
+```
+
+#### Hvorfor GameObjectRenderer hierarchy?
+**Separation of Concerns** - rendering skal ikke blandes med logikk:
+- `Vehicle` vet ingenting om threepp eller OpenGL
+- `VehicleRenderer` vet ingenting om fysikk eller hastighet
+- De kommuniserer kun gjennom GameObject interface
+
+Dette gjør at jeg kan:
+- Teste Vehicle uten grafikk
+- Bytte renderer uten å endre Vehicle
+- Legge til nye render-stiler (wireframe, textured, etc.) uten å endre core
+
+#### Hvorfor anonymous namespaces for konstanter?
+```cpp
+namespace {
+    const float MAX_SPEED = 41.67f;
+}
+```
+
+**I stedet for globale variabler eller #define:**
+- Type-safe (ikke makro)
+- Begrenset scope (kun synlig i denne filen)
+- Unngår linking conflicts hvis flere filer har samme navn
+- Moderne C++ best practice
+
+### Konklusjon
+
+Prosjektet demonstrerer solid forståelse for objektorientert programmering, moderne C++, og god programvarearkitektur. De største styrkene er:
+- Ren separasjon mellom logikk og presentasjon
+- Testbar kodebase
+- Utvidbar design (Open/Closed Principle)
+
+Hovedforbedringsområdet er å implementere obstacles for å møte alle miljø-krav, samt legge til CI/CD for automatisk testing.
+
+Totalt sett er jeg fornøyd med den tekniske kvaliteten, selv om funksjonaliteten kunne vært mer komplett.

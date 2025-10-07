@@ -34,6 +34,10 @@ Vehicle::Vehicle(float x, float y, float z)
     size_[0] = VEHICLE_WIDTH;
     size_[1] = VEHICLE_HEIGHT;
     size_[2] = VEHICLE_LENGTH;
+
+    // Set initial rotation to 180 degrees (π radians) so minimap direction matches
+    rotation_ = static_cast<float>(M_PI);
+    initialRotation_ = static_cast<float>(M_PI);
 }
 
 void Vehicle::accelerateForward() {
