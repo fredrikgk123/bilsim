@@ -7,7 +7,19 @@ InputHandler::InputHandler(Vehicle& vehicle)
       upPressed_(false),
       downPressed_(false),
       leftPressed_(false),
-      rightPressed_(false) {
+      rightPressed_(false),
+      shiftPressed_(false),
+      resetCallback_(nullptr) {
+}
+
+void InputHandler::setResetCallback(std::function<void()> callback) {
+    resetCallback_ = callback;
+}
+
+void InputHandler::onReset() {
+    if (resetCallback_ != nullptr) {
+        resetCallback_();
+    }
 }
 
 void InputHandler::onKeyPressed(KeyEvent evt) {
@@ -29,8 +41,16 @@ void InputHandler::onKeyPressed(KeyEvent evt) {
         case Key::D:
             rightPressed_ = true;
             break;
+        case Key::SPACE:
+            if (shiftPressed_ == false) {
+                vehicle_.activateNitrous();
+                shiftPressed_ = true;
+            }
+            break;
         case Key::R:
             vehicle_.reset();
+            // Trigger reset callback to respawn powerups
+            onReset();
             break;
         default:
             break;
@@ -54,6 +74,9 @@ void InputHandler::onKeyReleased(KeyEvent evt) {
         case Key::RIGHT:
         case Key::D:
             rightPressed_ = false;
+            break;
+        case Key::SPACE:
+            shiftPressed_ = false;
             break;
         default:
             break;

@@ -30,4 +30,9 @@ private:
 
     // Seven-segment display digits
     std::vector<std::vector<std::shared_ptr<threepp::Mesh>>> digitSegments_;
+
+    // Nitrous display components
+    std::shared_ptr<threepp::Mesh> nitrousIndicator_;
+    std::shared_ptr<threepp::Mesh> nitrousBar_;
+    std::shared_ptr<threepp::Mesh> nitrousBarOutline_;
 };

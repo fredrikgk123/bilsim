@@ -1,6 +1,7 @@
 #pragma once
 
 #include <threepp/threepp.hpp>
+#include <functional>
 #include "vehicle.hpp"
 
 class InputHandler : public threepp::KeyListener {
@@ -13,7 +14,12 @@ public:
     // Apply input to vehicle
     void update(float deltaTime);
 
+    // Set callback for reset event
+    void setResetCallback(std::function<void()> callback);
+
 private:
+    void onReset();
+
     Vehicle& vehicle_;
 
     // Key state tracking
@@ -21,4 +27,8 @@ private:
     bool downPressed_;
     bool leftPressed_;
     bool rightPressed_;
+    bool shiftPressed_;
+
+    // Reset callback
+    std::function<void()> resetCallback_;
 };

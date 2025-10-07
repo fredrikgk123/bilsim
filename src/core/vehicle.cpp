@@ -12,6 +12,11 @@ namespace {
     const float FRICTION_COEFFICIENT = 0.997f;      // More friction for tighter control
     const float MIN_TURN_SPEED = 0.5f;              // Prevents spinning at very low speed
 
+    // Nitrous constants
+    const float NITROUS_DURATION = 5.0f;            // 5 seconds of boost
+    const float NITROUS_ACCELERATION = 20.0f;       // Much stronger acceleration when active
+    const float NITROUS_MAX_SPEED = 55.56f;         // ~200 km/h during boost
+
     // Vehicle dimensions
     const float VEHICLE_WIDTH = 1.0f;
     const float VEHICLE_HEIGHT = 0.5f;
@@ -21,7 +26,10 @@ namespace {
 Vehicle::Vehicle(float x, float y, float z)
     : GameObject(x, y, z),
       velocity_(0.0f),
-      acceleration_(0.0f) {
+      acceleration_(0.0f),
+      hasNitrous_(false),
+      nitrousActive_(false),
+      nitrousTimeRemaining_(0.0f) {
     // Set vehicle-specific size
     size_[0] = VEHICLE_WIDTH;
     size_[1] = VEHICLE_HEIGHT;
@@ -29,7 +37,11 @@ Vehicle::Vehicle(float x, float y, float z)
 }
 
 void Vehicle::accelerateForward() {
-    acceleration_ = FORWARD_ACCELERATION;
+    if (nitrousActive_ == true) {
+        acceleration_ = NITROUS_ACCELERATION;
+    } else {
+        acceleration_ = FORWARD_ACCELERATION;
+    }
 }
 
 void Vehicle::accelerateBackward() {
@@ -93,16 +105,51 @@ float Vehicle::calculateTurnRate() const {
     return turnRate;
 }
 
+void Vehicle::activateNitrous() {
+    if (hasNitrous_ == true && nitrousActive_ == false) {
+        nitrousActive_ = true;
+        nitrousTimeRemaining_ = NITROUS_DURATION;
+        hasNitrous_ = false; // Consumed when activated
+    }
+}
+
+void Vehicle::pickupNitrous() {
+    hasNitrous_ = true;
+}
+
+bool Vehicle::hasNitrous() const {
+    return hasNitrous_;
+}
+
+bool Vehicle::isNitrousActive() const {
+    return nitrousActive_;
+}
+
+float Vehicle::getNitrousTimeRemaining() const {
+    return nitrousTimeRemaining_;
+}
+
 void Vehicle::update(float deltaTime) {
+    // Update nitrous timer
+    if (nitrousActive_ == true) {
+        nitrousTimeRemaining_ = nitrousTimeRemaining_ - deltaTime;
+        if (nitrousTimeRemaining_ <= 0.0f) {
+            nitrousActive_ = false;
+            nitrousTimeRemaining_ = 0.0f;
+        }
+    }
+
     // Update velocity based on acceleration
     velocity_ = velocity_ + (acceleration_ * deltaTime);
 
     // Apply friction
     velocity_ = velocity_ * FRICTION_COEFFICIENT;
 
-    // Clamp velocity to max speeds
-    if (velocity_ > MAX_SPEED) {
-        velocity_ = MAX_SPEED;
+    // Clamp velocity to max speeds (higher during nitrous)
+    float currentMaxSpeed = (nitrousActive_ == true) ? NITROUS_MAX_SPEED : MAX_SPEED;
+
+    if (velocity_ > currentMaxSpeed) {
+        velocity_ = currentMaxSpeed;
     }
     if (velocity_ < -MAX_REVERSE_SPEED) {
         velocity_ = -MAX_REVERSE_SPEED;
@@ -122,6 +169,9 @@ void Vehicle::reset() {
     GameObject::reset();
     velocity_ = 0.0f;
     acceleration_ = 0.0f;
+    hasNitrous_ = false;
+    nitrousActive_ = false;
+    nitrousTimeRemaining_ = 0.0f;
 }
 
 float Vehicle::getVelocity() const {

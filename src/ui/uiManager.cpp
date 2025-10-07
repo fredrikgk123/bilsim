@@ -32,6 +32,45 @@ UIManager::UIManager(GLRenderer& renderer)
     hudCamera_->position.z = 1;
 
     createSpeedometerGeometry();
+
+    // Create nitrous indicator
+    auto nitrousGeometry = PlaneGeometry::create(0.08f, 0.08f);
+    auto nitrousMaterial = MeshBasicMaterial::create();
+    nitrousMaterial->color = Color(0x00aaff); // Bright blue
+    nitrousMaterial->transparent = true;
+    nitrousMaterial->opacity = 0.9f;
+    nitrousMaterial->depthTest = false;
+
+    nitrousIndicator_ = Mesh::create(nitrousGeometry, nitrousMaterial);
+    nitrousIndicator_->position.set(0.6f, -0.85f, 0.03f);
+    nitrousIndicator_->visible = false;
+    hudScene_->add(nitrousIndicator_);
+
+    // Create nitrous bar outline
+    auto nitrousOutlineGeometry = PlaneGeometry::create(0.32f, 0.03f);
+    auto nitrousOutlineMaterial = MeshBasicMaterial::create();
+    nitrousOutlineMaterial->color = Color(0x333333);
+    nitrousOutlineMaterial->transparent = true;
+    nitrousOutlineMaterial->opacity = 0.8f;
+    nitrousOutlineMaterial->depthTest = false;
+
+    nitrousBarOutline_ = Mesh::create(nitrousOutlineGeometry, nitrousOutlineMaterial);
+    nitrousBarOutline_->position.set(0.6f, -0.85f, 0.01f);
+    nitrousBarOutline_->visible = false;
+    hudScene_->add(nitrousBarOutline_);
+
+    // Create nitrous bar fill
+    auto nitrousBarGeometry = PlaneGeometry::create(0.32f, 0.03f);
+    auto nitrousBarMaterial = MeshBasicMaterial::create();
+    nitrousBarMaterial->color = Color(0x00aaff);
+    nitrousBarMaterial->transparent = true;
+    nitrousBarMaterial->opacity = 0.9f;
+    nitrousBarMaterial->depthTest = false;
+
+    nitrousBar_ = Mesh::create(nitrousBarGeometry, nitrousBarMaterial);
+    nitrousBar_->position.set(0.6f, -0.85f, 0.02f);
+    nitrousBar_->visible = false;
+    hudScene_->add(nitrousBar_);
 }
 
 void UIManager::createSpeedometerGeometry() {
@@ -205,6 +244,30 @@ void UIManager::updateSpeedometer(float speed) {
 void UIManager::render(const Vehicle& vehicle, const WindowSize& size) {
     float speed = vehicle.getVelocity();
     updateSpeedometer(speed);
+
+    // Update nitrous indicator
+    if (vehicle.hasNitrous() == true) {
+        nitrousIndicator_->visible = true;
+        nitrousBarOutline_->visible = false;
+        nitrousBar_->visible = false;
+    } else if (vehicle.isNitrousActive() == true) {
+        nitrousIndicator_->visible = false;
+        nitrousBarOutline_->visible = true;
+        nitrousBar_->visible = true;
+
+        // Update nitrous bar based on time remaining
+        float timeRemaining = vehicle.getNitrousTimeRemaining();
+        float nitrousRatio = timeRemaining / 5.0f; // 5 seconds duration
+
+        nitrousBar_->scale.x = nitrousRatio;
+
+        float barWidth = 0.32f;
+        nitrousBar_->position.x = 0.6f - ((barWidth / 2.0f) * (1.0f - nitrousRatio));
+    } else {
+        nitrousIndicator_->visible = false;
+        nitrousBarOutline_->visible = false;
+        nitrousBar_->visible = false;
+    }
 
     // Render HUD overlay on top of main scene
     renderer_.autoClear = false;
