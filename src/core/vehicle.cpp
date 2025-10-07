@@ -6,7 +6,7 @@ namespace {
     // Physics constants (realistic tuning)
     const float MAX_SPEED = 41.67f;                  // ~150 km/h (realistic for a small car)
     const float MAX_REVERSE_SPEED = 13.9f;           // ~50 km/h reverse
-    const float TURN_SPEED = 1.0f;                  // 1 rad/sec (~57°/sec)
+    const float TURN_SPEED = 1.5f;                   // 1.5 rad/sec (~86°/sec) - sharper turning
     const float FORWARD_ACCELERATION = 8.0f;        // Balanced acceleration
     const float BACKWARD_ACCELERATION = -4.0f;      // Slower reverse acceleration
     const float FRICTION_COEFFICIENT = 0.997f;      // More friction for tighter control
@@ -14,8 +14,8 @@ namespace {
 
     // Nitrous constants
     const float NITROUS_DURATION = 5.0f;            // 5 seconds of boost
-    const float NITROUS_ACCELERATION = 20.0f;       // Much stronger acceleration when active
-    const float NITROUS_MAX_SPEED = 55.56f;         // ~200 km/h during boost
+    const float NITROUS_ACCELERATION = 14.0f;       // Moderate boost acceleration
+    const float NITROUS_MAX_SPEED = 50.0f;          // ~180 km/h during boost
 
     // Vehicle dimensions
     const float VEHICLE_WIDTH = 1.0f;

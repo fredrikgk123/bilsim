@@ -72,17 +72,36 @@ void AudioManager::update(const Vehicle& vehicle) {
     }
 
     float absVelocity = std::abs(vehicle.getVelocity());
+    bool nitrousActive = vehicle.isNitrousActive();
 
     // Update pitch based on speed (simulates engine RPM)
-    float pitch = calculateEnginePitch(absVelocity, 20.0f);  // 20.0 reference speed - tuned for good audio response
+    // Boost pitch and reference speed during nitrous for more aggressive sound
+    float referenceSpeed = 20.0f;
+    if (nitrousActive == true) {
+        referenceSpeed = 25.0f;  // Higher reference speed during nitrous
+    }
+
+    float pitch = calculateEnginePitch(absVelocity, referenceSpeed);
+
+    // Add extra pitch boost during nitrous
+    if (nitrousActive == true) {
+        pitch = pitch * 1.2f;  // 20% higher pitch during nitrous
+    }
+
     ma_sound_set_pitch(engineSound_.get(), pitch);
 
     // Update volume based on speed
-    float volume = 0.3f + (absVelocity / 20.0f) * 0.5f;  // Range: 0.3 (idle) to 0.8 (full throttle)
+    float baseVolume = 0.3f + (absVelocity / 20.0f) * 0.5f;  // Range: 0.3 (idle) to 0.8 (full throttle)
 
-    // Cap volume at 0.8 to prevent distortion
-    if (volume > 0.8f) {
-        volume = 0.8f;
+    // Boost volume significantly during nitrous
+    float volume = baseVolume;
+    if (nitrousActive == true) {
+        volume = volume + 0.3f;  // Add 30% more volume during nitrous
+    }
+
+    // Cap volume at 1.0 to prevent distortion
+    if (volume > 1.0f) {
+        volume = 1.0f;
     }
 
     ma_sound_set_volume(engineSound_.get(), volume);
