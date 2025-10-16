@@ -36,7 +36,7 @@ public:
     float getMaxSpeed() const;
 
     // Callback for resetting camera to orbit
-    void setResetCameraCallback(std::function<void()> callback);
+    void setResetCameraCallback(std::function<void()> &&callback);
 
 private:
     // Calculate turn rate based on current speed

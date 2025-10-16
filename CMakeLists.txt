@@ -19,7 +19,7 @@ FetchContent_Declare(
     GIT_TAG 619cdaacc2e7dc6ea709d8c7f482e2994af7349d
 )
 
-# Fetch miniaudio as a single header file (more reliable)
+# Fetch miniaudio as a single header file
 FetchContent_Declare(
     miniaudio
     URL https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h

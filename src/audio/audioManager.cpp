@@ -5,16 +5,43 @@
 #include <iostream>
 #include <cmath>
 
+namespace {
+    // Audio volume constants
+    constexpr float ENGINE_IDLE_VOLUME = 0.3f;        // 30% volume at idle
+    constexpr float ENGINE_IDLE_PITCH = 0.8f;         // 80% pitch at idle (lower for idle sound)
+    constexpr float ENGINE_MAX_VOLUME = 0.8f;         // 80% max volume at full throttle
+    constexpr float NITROUS_VOLUME_BOOST = 0.3f;      // Add 30% volume during nitrous
+    constexpr float NITROUS_PITCH_MULTIPLIER = 1.2f;  // 20% higher pitch during nitrous
+    constexpr float MAX_VOLUME = 1.0f;                // Cap at 100% to prevent distortion
+
+    constexpr float DRIFT_SOUND_VOLUME = 0.4f;        // 40% volume for drift sound
+    constexpr float DRIFT_SOUND_MIN_VOLUME = 0.3f;
+    constexpr float DRIFT_SOUND_MAX_VOLUME = 0.6f;
+    constexpr float DRIFT_MIN_SPEED = 5.0f;           // Minimum speed for drift sound
+
+    // Audio pitch constants
+    constexpr float ENGINE_PITCH_MIN = 0.8f;          // Minimum pitch (idle)
+    constexpr float ENGINE_PITCH_MAX = 2.0f;          // Maximum pitch (max RPM)
+    constexpr float ENGINE_PITCH_RANGE = ENGINE_PITCH_MAX - ENGINE_PITCH_MIN; // 1.2
+
+    // Reference speeds for audio calculation
+    constexpr float BASE_REFERENCE_SPEED = 20.0f;     // Base speed for pitch calculation
+    constexpr float NITROUS_REFERENCE_SPEED = 25.0f;  // Higher reference during nitrous
+
+    // Asset path
+    const std::string DRIFT_SOUND_PATH = "assets/tireScreech.wav";
+}
+
 // Implement custom deleters
 void AudioManager::AudioDeleter::operator()(ma_engine* engine) const {
-    if (engine != nullptr) {
+    if (engine) {
         ma_engine_uninit(engine);
         delete engine;
     }
 }
 
 void AudioManager::AudioDeleter::operator()(ma_sound* sound) const {
-    if (sound != nullptr) {
+    if (sound) {
         ma_sound_uninit(sound);
         delete sound;
     }
@@ -29,55 +56,53 @@ AudioManager::AudioManager()
       driftSoundLoaded_(false) {
 }
 
-AudioManager::~AudioManager() = default;  // unique_ptr handles cleanup automatically
+AudioManager::~AudioManager() = default;
 
 bool AudioManager::initialize(const std::string& engineSoundPath) {
-    // Initialize audio engine
-    ma_engine* engine = new ma_engine();
-    ma_result result = ma_engine_init(nullptr, engine);
+    // Initialize audio engine - use unique_ptr from the start for exception safety
+    std::unique_ptr<ma_engine, AudioDeleter> engine(new ma_engine());
+    ma_result result = ma_engine_init(nullptr, engine.get());
 
     if (result != MA_SUCCESS) {
         std::cerr << "Failed to initialize audio engine" << std::endl;
-        delete engine;
         return false;
     }
-    engine_.reset(engine);
+    engine_ = std::move(engine);
     initialized_ = true;
 
-    // Load engine sound file
-    ma_sound* sound = new ma_sound();
+    // Load engine sound file - use unique_ptr from the start
+    std::unique_ptr<ma_sound, AudioDeleter> sound(new ma_sound());
     result = ma_sound_init_from_file(engine_.get(), engineSoundPath.c_str(),
                                      MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
-                                     nullptr, nullptr, sound);
+                                     nullptr, nullptr, sound.get());
 
     if (result != MA_SUCCESS) {
         std::cout << "Engine sound not found at: " << engineSoundPath << std::endl;
-        delete sound;
         return false;
     }
-    engineSound_.reset(sound);
+    engineSound_ = std::move(sound);
 
     // Configure sound playback
     ma_sound_set_looping(engineSound_.get(), MA_TRUE);
-    ma_sound_set_volume(engineSound_.get(), 0.3f);  // 0.3 = 30% - idle engine volume (quiet)
-    ma_sound_set_pitch(engineSound_.get(), 0.8f);   // 0.8 = 80% speed - lower pitch for idle
+    ma_sound_set_volume(engineSound_.get(), ENGINE_IDLE_VOLUME);
+    ma_sound_set_pitch(engineSound_.get(), ENGINE_IDLE_PITCH);
     ma_sound_start(engineSound_.get());
 
     soundLoaded_ = true;
 
     // Load drift/tire screech sound file
-    ma_sound* driftSnd = new ma_sound();
-    result = ma_sound_init_from_file(engine_.get(), "assets/tireScreech.wav",
+    std::unique_ptr<ma_sound, AudioDeleter> driftSnd(new ma_sound());
+    result = ma_sound_init_from_file(engine_.get(), DRIFT_SOUND_PATH.c_str(),
                                      MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
-                                     nullptr, nullptr, driftSnd);
+                                     nullptr, nullptr, driftSnd.get());
 
     if (result != MA_SUCCESS) {
-        std::cout << "Drift sound not found at: assets/tireScreech.wav" << std::endl;
-        delete driftSnd;
+        std::cout << "Drift sound not found at: " << DRIFT_SOUND_PATH << std::endl;
+        // driftSnd will be automatically cleaned up
     } else {
-        driftSound_.reset(driftSnd);
+        driftSound_ = std::move(driftSnd);
         ma_sound_set_looping(driftSound_.get(), MA_TRUE);
-        ma_sound_set_volume(driftSound_.get(), 0.4f);  // 40% volume for drift sound
+        ma_sound_set_volume(driftSound_.get(), DRIFT_SOUND_VOLUME);
         driftSoundLoaded_ = true;
     }
 
@@ -86,58 +111,50 @@ bool AudioManager::initialize(const std::string& engineSoundPath) {
 }
 
 void AudioManager::update(const Vehicle& vehicle) {
-    if (initialized_ == false || soundLoaded_ == false) {
+    if (!initialized_ || !soundLoaded_) {
         return;
     }
 
-    float absVelocity = std::abs(vehicle.getVelocity());
-    bool nitrousActive = vehicle.isNitrousActive();
-    bool isDrifting = vehicle.isDrifting();
+    const float absoluteVelocity = std::abs(vehicle.getVelocity());
+    const bool nitrousActive = vehicle.isNitrousActive();
+    const bool isDrifting = vehicle.isDrifting();
 
     // Update pitch based on speed (simulates engine RPM)
-    // Boost pitch and reference speed during nitrous for more aggressive sound
-    float referenceSpeed = 20.0f;
-    if (nitrousActive == true) {
-        referenceSpeed = 25.0f;  // Higher reference speed during nitrous
-    }
-
-    float pitch = calculateEnginePitch(absVelocity, referenceSpeed);
+    const float referenceSpeed = nitrousActive ? NITROUS_REFERENCE_SPEED : BASE_REFERENCE_SPEED;
+    float pitch = calculateEnginePitch(absoluteVelocity, referenceSpeed);
 
     // Add extra pitch boost during nitrous
-    if (nitrousActive == true) {
-        pitch = pitch * 1.2f;  // 20% higher pitch during nitrous
+    if (nitrousActive) {
+        pitch *= NITROUS_PITCH_MULTIPLIER;
     }
 
     ma_sound_set_pitch(engineSound_.get(), pitch);
 
     // Update volume based on speed
-    float baseVolume = 0.3f + (absVelocity / 20.0f) * 0.5f;  // Range: 0.3 (idle) to 0.8 (full throttle)
+    const float baseVolume = ENGINE_IDLE_VOLUME + (absoluteVelocity / BASE_REFERENCE_SPEED) * (ENGINE_MAX_VOLUME - ENGINE_IDLE_VOLUME);
 
     // Boost volume significantly during nitrous
     float volume = baseVolume;
-    if (nitrousActive == true) {
-        volume = volume + 0.3f;  // Add 30% more volume during nitrous
+    if (nitrousActive) {
+        volume += NITROUS_VOLUME_BOOST;
     }
 
-    // Cap volume at 1.0 to prevent distortion
-    if (volume > 1.0f) {
-        volume = 1.0f;
-    }
+    // Cap volume at maximum to prevent distortion
+    volume = std::min(volume, MAX_VOLUME);
 
     ma_sound_set_volume(engineSound_.get(), volume);
 
     // Handle drift sound
-    if (driftSoundLoaded_ == true) {
-        if (isDrifting == true && absVelocity > 5.0f) {
+    if (driftSoundLoaded_) {
+        if (isDrifting && absoluteVelocity > DRIFT_MIN_SPEED) {
             // Start drift sound if not already playing
             if (ma_sound_is_playing(driftSound_.get()) == MA_FALSE) {
                 ma_sound_start(driftSound_.get());
             }
             // Adjust volume based on speed - louder when drifting faster
-            float driftVolume = 0.3f + (absVelocity / 20.0f) * 0.3f;  // Range: 0.3 to 0.6
-            if (driftVolume > 0.6f) {
-                driftVolume = 0.6f;
-            }
+            float driftVolume = DRIFT_SOUND_MIN_VOLUME +
+                               (absoluteVelocity / BASE_REFERENCE_SPEED) * (DRIFT_SOUND_MAX_VOLUME - DRIFT_SOUND_MIN_VOLUME);
+            driftVolume = std::min(driftVolume, DRIFT_SOUND_MAX_VOLUME);
             ma_sound_set_volume(driftSound_.get(), driftVolume);
         } else {
             // Stop drift sound when not drifting or moving too slow
@@ -149,14 +166,8 @@ void AudioManager::update(const Vehicle& vehicle) {
 }
 
 float AudioManager::calculateEnginePitch(float velocity, float maxSpeed) const {
-    float speedRatio = velocity / maxSpeed;
+    float speedRatio = std::min(velocity / maxSpeed, 1.0f);
 
-    // Clamp speed ratio to 1.0
-    if (speedRatio > 1.0f) {
-        speedRatio = 1.0f;
-    }
-
-    // Pitch range: 0.8 (idle) to 2.0 (max RPM)
-    float pitch = 0.8f + (std::sqrt(speedRatio) * 1.2f);  // 1.2 range (2.0 - 0.8) - square root creates realistic RPM curve
-    return pitch;
+    // Square root creates realistic RPM curve
+    return ENGINE_PITCH_MIN + (std::sqrt(speedRatio) * ENGINE_PITCH_RANGE);
 }

@@ -48,7 +48,7 @@ void GameObject::setActive(bool active) {
 
 bool GameObject::intersects(const GameObject& other) const {
     // Simple AABB (Axis-Aligned Bounding Box) collision detection
-    if (active_ == false || other.active_ == false) {
+    if (!active_ || !other.active_) {
         return false;
     }
 

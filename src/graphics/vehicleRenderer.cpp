@@ -4,6 +4,11 @@
 
 using namespace threepp;
 
+namespace {
+    constexpr float MODEL_SCALE = 0.5f;          // Scale factor for loaded 3D models
+    constexpr float MODEL_VERTICAL_OFFSET = 0.5f; // Lift car above ground to prevent sinking
+}
+
 VehicleRenderer::VehicleRenderer(Scene& scene, const Vehicle& vehicle)
     : GameObjectRenderer(scene, vehicle),
       vehicle_(vehicle),
@@ -28,16 +33,8 @@ bool VehicleRenderer::loadModel(const std::string& modelPath) {
         }
 
         // Scale and position the loaded model
-        std::array<float, 3> size = vehicle_.getSize();
-
-        // Calculate bounding box to scale appropriately
-        // Most car models need to be scaled down
-        float modelScale = 0.5f;  // Adjust this based on your model
-        loadedGroup->scale.setScalar(modelScale);
-
-        // Position above ground level to prevent sinking
-        // Adjust this value if the car is still too low or too high
-        loadedGroup->position.y = 0.5f;  // Lift the car up
+        loadedGroup->scale.setScalar(MODEL_SCALE);
+        loadedGroup->position.y = MODEL_VERTICAL_OFFSET;
 
         // Enable shadows for all meshes in the loaded model
         loadedGroup->traverse([](Object3D& obj) {

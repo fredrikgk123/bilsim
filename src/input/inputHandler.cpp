@@ -14,11 +14,11 @@ InputHandler::InputHandler(Vehicle& vehicle, SceneManager& sceneManager)
 }
 
 void InputHandler::setResetCallback(std::function<void()> callback) {
-    resetCallback_ = callback;
+    resetCallback_ = std::move(callback);
 }
 
 void InputHandler::onReset() {
-    if (resetCallback_ != nullptr) {
+    if (resetCallback_) {
         resetCallback_();
     }
 }
@@ -46,7 +46,7 @@ void InputHandler::onKeyPressed(KeyEvent evt) {
             vehicle_.startDrift();
             break;
         case Key::F:
-            if (shiftPressed_ == false) {
+            if (!shiftPressed_) {
                 vehicle_.activateNitrous();
                 shiftPressed_ = true;
             }
@@ -96,26 +96,20 @@ void InputHandler::onKeyReleased(KeyEvent evt) {
 
 void InputHandler::update(float deltaTime) {
     // Handle acceleration
-    if (upPressed_ == true) {
+    if (upPressed_) {
         vehicle_.accelerateForward();
-    } else if (downPressed_ == true) {
+    } else if (downPressed_) {
         vehicle_.accelerateBackward();
     }
 
     // Handle turning (reverse when moving backwards)
     float velocity = vehicle_.getVelocity();
-    float turnDirection = 1.0f;
+    float turnDirection = (velocity >= 0.0f) ? 1.0f : -1.0f;
 
-    if (velocity >= 0.0f) {
-        turnDirection = 1.0f;
-    } else {
-        turnDirection = -1.0f;
-    }
-
-    if (leftPressed_ == true) {
+    if (leftPressed_) {
         vehicle_.turn(deltaTime * turnDirection);
     }
-    if (rightPressed_ == true) {
+    if (rightPressed_) {
         vehicle_.turn(-deltaTime * turnDirection);
     }
 }

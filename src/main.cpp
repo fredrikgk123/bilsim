@@ -13,34 +13,43 @@
 
 using namespace threepp;
 
+namespace {
+    // Game configuration constants
+    constexpr int POWERUP_COUNT = 20;
+    constexpr float PLAY_AREA_SIZE = 200.0f;
+    constexpr float SPAWN_X = 0.0f;
+    constexpr float SPAWN_Y = 0.0f;
+    constexpr float SPAWN_Z = 0.0f;
+
+    // UI layout constants
+    constexpr int MINIMAP_SIZE = 150;
+    constexpr int MINIMAP_PADDING = 10;
+    constexpr float MINIMAP_ASPECT_RATIO = 1.0f;
+
+    // Asset paths
+    const std::string CAR_MODEL_PATH = "assets/Chevrolet_Camaro_SS_High.obj";
+    const std::string ENGINE_SOUND_PATH = "assets/carnoise.wav";
+}
+
 int main() {
-    // Game constants
-    const int POWERUP_COUNT = 20;
-    const float PLAY_AREA_SIZE = 200.0f;
-
-    // UI Constants
-    int minimapSize = 150; // Minimap size in pixels
-    int minimapPadding = 10; // Padding from screen corner
-
     Canvas canvas("Bilsimulator");
 
     // Initialize scene
     SceneManager sceneManager;
     sceneManager.setupCamera(canvas.aspect());
-    sceneManager.setupMinimapCamera(1.0f); // 1.0 aspect ratio - square minimap
+    sceneManager.setupMinimapCamera(MINIMAP_ASPECT_RATIO);
     sceneManager.setupRenderer(canvas.size());
     sceneManager.setupLighting();
     sceneManager.setupGround();
 
     // Create vehicle and renderer
-    Vehicle vehicle(0.0f, 0.0f, 0.0f);
+    Vehicle vehicle(SPAWN_X, SPAWN_Y, SPAWN_Z);
     VehicleRenderer vehicleRenderer(sceneManager.getScene(), vehicle);
 
-    // Try to load a custom car model (OBJ format)
-    // The Camaro model is already in the assets directory
-    vehicleRenderer.loadModel("assets/Chevrolet_Camaro_SS_High.obj");
+    // Load custom car model
+    vehicleRenderer.loadModel(CAR_MODEL_PATH);
 
-    // Create powerup manager with 20 randomly placed powerups
+    // Create powerup manager with randomly placed powerups
     PowerupManager powerupManager(POWERUP_COUNT, PLAY_AREA_SIZE);
 
     // Create renderers for all powerups
@@ -50,7 +59,7 @@ int main() {
         powerupRenderers.push_back(std::move(renderer));
     }
 
-    // Setup input handling (pass sceneManager for camera toggle)
+    // Setup input handling
     std::unique_ptr<InputHandler> inputHandler = std::make_unique<InputHandler>(vehicle, sceneManager);
     canvas.addKeyListener(*inputHandler);
 
@@ -59,17 +68,17 @@ int main() {
         powerupManager.reset();
     });
 
-    // Set up vehicle reset callback to reset camera to orbit mode
+    // Set up vehicle reset callback to reset camera to follow mode
     vehicle.setResetCameraCallback([&sceneManager]() {
         sceneManager.setCameraMode(CameraMode::FOLLOW);
     });
 
-    // Initialize audio (optional)
+    // Initialize audio
     AudioManager audioManager;
-    bool audioEnabled = audioManager.initialize("assets/carnoise.wav");
+    bool audioEnabled = audioManager.initialize(ENGINE_SOUND_PATH);
 
-    if (audioEnabled == false) {
-        std::cout << "Audio file 'assets/carnoise.wav' not found. Continuing without audio..." << std::endl;
+    if (!audioEnabled) {
+        std::cout << "Audio file '" << ENGINE_SOUND_PATH << "' not found. Continuing without audio..." << std::endl;
     }
 
     // Setup UI
@@ -96,45 +105,46 @@ int main() {
         powerupManager.handleCollisions(vehicle);
 
         // Update powerup renderers
-        for (auto& renderer : powerupRenderers) {
-            renderer->update();
+        for (auto& powerupRenderer : powerupRenderers) {
+            powerupRenderer->update();
         }
 
         // Update camera to follow vehicle
-        std::array<float, 3> position = vehicle.getPosition();
-        float rotation = vehicle.getRotation();
-        sceneManager.updateCameraFollowTarget(position[0], position[1], position[2], rotation, vehicle.isNitrousActive());
-        sceneManager.updateMinimapCamera(position[0], position[2]);
+        const std::array<float, 3> vehiclePosition = vehicle.getPosition();
+        const float vehicleRotation = vehicle.getRotation();
+        sceneManager.updateCameraFollowTarget(vehiclePosition[0], vehiclePosition[1], vehiclePosition[2],
+                                              vehicleRotation, vehicle.isNitrousActive());
+        sceneManager.updateMinimapCamera(vehiclePosition[0], vehiclePosition[2]);
 
         // Update camera FOV based on nitrous state (speed FOV effect)
         sceneManager.updateCameraFOV(vehicle.isNitrousActive());
 
         // Update audio
-        if (audioEnabled == true) {
+        if (audioEnabled) {
             audioManager.update(vehicle);
         }
 
-        GLRenderer &renderer = sceneManager.getRenderer();
-        const WindowSize& size = canvas.size();
+        GLRenderer& glRenderer = sceneManager.getRenderer();
+        const WindowSize& windowSize = canvas.size();
 
         // Render main view
-        renderer.setViewport(0, 0, size.width(), size.height());
-        renderer.setScissor(0, 0, size.width(), size.height());
-        renderer.setScissorTest(false);
+        glRenderer.setViewport(0, 0, windowSize.width(), windowSize.height());
+        glRenderer.setScissor(0, 0, windowSize.width(), windowSize.height());
+        glRenderer.setScissorTest(false);
         sceneManager.getRenderer().render(sceneManager.getScene(), sceneManager.getCamera());
 
-        // Render minimap
-        int minimapX = minimapPadding;
-        int minimapY = size.height() - minimapSize - minimapPadding;
-        renderer.setViewport(minimapX, minimapY, minimapSize, minimapSize);
-        renderer.setScissor(minimapX, minimapY, minimapSize, minimapSize);
-        renderer.setScissorTest(true);
+        // Render minimap in bottom-left corner
+        const int minimapX = MINIMAP_PADDING;
+        const int minimapY = windowSize.height() - MINIMAP_SIZE - MINIMAP_PADDING;
+        glRenderer.setViewport(minimapX, minimapY, MINIMAP_SIZE, MINIMAP_SIZE);
+        glRenderer.setScissor(minimapX, minimapY, MINIMAP_SIZE, MINIMAP_SIZE);
+        glRenderer.setScissorTest(true);
         sceneManager.renderMinimap();
-        renderer.setScissorTest(false);
+        glRenderer.setScissorTest(false);
 
         // Render UI overlay
-        renderer.setViewport(0, 0, size.width(), size.height());
-        uiManager.render(vehicle, size);
+        glRenderer.setViewport(0, 0, windowSize.width(), windowSize.height());
+        uiManager.render(vehicle, windowSize);
     });
 
     return 0;
