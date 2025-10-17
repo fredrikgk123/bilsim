@@ -3,22 +3,19 @@
 #include <iostream>
 #include <vector>
 #include "core/vehicle.hpp"
-#include "core/powerup_manager.hpp"
-#include "core/obstacle_manager.hpp"
-#include "graphics/vehicle_renderer.hpp"
-#include "graphics/powerup_renderer.hpp"
-#include "graphics/obstacle_renderer.hpp"
-#include "graphics/scene_manager.hpp"
-#include "input/input_handler.hpp"
-#include "audio/audio_manager.hpp"
-#include "ui/ui_manager.hpp"
+#include "core/powerupManager.hpp"
+#include "graphics/vehicleRenderer.hpp"
+#include "graphics/powerupRenderer.hpp"
+#include "graphics/sceneManager.hpp"
+#include "input/inputHandler.hpp"
+#include "audio/audioManager.hpp"
+#include "ui/uiManager.hpp"
 
 using namespace threepp;
 
 namespace {
     // Game configuration constants
     constexpr int POWERUP_COUNT = 20;
-    constexpr int TREE_COUNT = 30;  // Number of trees scattered around
     constexpr float PLAY_AREA_SIZE = 200.0f;
     constexpr float SPAWN_X = 0.0f;
     constexpr float SPAWN_Y = 0.0f;
@@ -51,16 +48,6 @@ int main() {
 
     // Load custom car model
     vehicleRenderer.loadModel(CAR_MODEL_PATH);
-
-    // Create obstacle manager with walls and trees
-    ObstacleManager obstacleManager(PLAY_AREA_SIZE, TREE_COUNT);
-
-    // Create renderers for all obstacles
-    std::vector<std::unique_ptr<ObstacleRenderer>> obstacleRenderers;
-    for (const auto& obstacle : obstacleManager.getObstacles()) {
-        auto renderer = std::make_unique<ObstacleRenderer>(sceneManager.getScene(), *obstacle);
-        obstacleRenderers.push_back(std::move(renderer));
-    }
 
     // Create powerup manager with randomly placed powerups
     PowerupManager powerupManager(POWERUP_COUNT, PLAY_AREA_SIZE);
@@ -112,9 +99,6 @@ int main() {
         inputHandler->update(deltaTime);
         vehicle.update(deltaTime);
         vehicleRenderer.update();
-
-        // Handle obstacle collisions
-        obstacleManager.handleCollisions(vehicle);
 
         // Update powerups and handle collisions
         powerupManager.update(deltaTime);

@@ -1,4 +1,4 @@
-#include "game_object.hpp"
+#include "gameObject.hpp"
 #include <cmath>
 
 GameObject::GameObject(float x, float y, float z)
@@ -48,7 +48,9 @@ void GameObject::setActive(bool active) {
 
 bool GameObject::intersects(const GameObject& other) const {
     // Simple AABB (Axis-Aligned Bounding Box) collision detection
-    // This is purely geometric - active state should be checked by game logic
+    if (!active_ || !other.active_) {
+        return false;
+    }
 
     // Calculate bounding box edges
     float thisMinX = position_[0] - (size_[0] / 2.0f);
