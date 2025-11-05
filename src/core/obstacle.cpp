@@ -2,11 +2,11 @@
 
 namespace {
     // Obstacle size constants
-    constexpr float WALL_LENGTH = 5.0f;  // Length of each wall segment
-    constexpr float WALL_HEIGHT = 5.0f;  // Height of wall
-    constexpr float WALL_THICKNESS = 2.0f;   // Thickness of wall
+    constexpr float WALL_LENGTH = 5.0f;
+    constexpr float WALL_HEIGHT = 5.0f;
+    constexpr float WALL_THICKNESS = 2.0f;
 
-    constexpr float TREE_COLLISION_RADIUS = 0.5f;  // Small hitbox for easier navigation
+    constexpr float TREE_COLLISION_RADIUS = 0.5f;
     constexpr float TREE_HEIGHT = 6.0f;
 }
 

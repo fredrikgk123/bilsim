@@ -7,25 +7,25 @@
 
 namespace {
     // Audio volume constants
-    constexpr float ENGINE_IDLE_VOLUME = 0.3f;        // 30% volume at idle
-    constexpr float ENGINE_IDLE_PITCH = 0.8f;         // 80% pitch at idle (lower for idle sound)
-    constexpr float ENGINE_MAX_VOLUME = 0.8f;         // 80% max volume at full throttle
-    constexpr float NITROUS_VOLUME_BOOST = 0.3f;      // Add 30% volume during nitrous
-    constexpr float NITROUS_PITCH_MULTIPLIER = 1.2f;  // 20% higher pitch during nitrous
-    constexpr float MAX_VOLUME = 1.0f;                // Cap at 100% to prevent distortion
+    constexpr float ENGINE_IDLE_VOLUME = 0.3f;
+    constexpr float ENGINE_IDLE_PITCH = 0.8f;
+    constexpr float ENGINE_MAX_VOLUME = 0.8f;
+    constexpr float NITROUS_VOLUME_BOOST = 0.3f;
+    constexpr float NITROUS_PITCH_MULTIPLIER = 1.2f;
+    constexpr float MAX_VOLUME = 1.0f;
 
-    constexpr float DRIFT_SOUND_VOLUME = 0.4f;        // 40% volume for drift sound
+    constexpr float DRIFT_SOUND_VOLUME = 0.4f;
     constexpr float DRIFT_SOUND_MIN_VOLUME = 0.3f;
     constexpr float DRIFT_SOUND_MAX_VOLUME = 0.6f;
-    constexpr float DRIFT_MIN_SPEED = 5.0f;           // Minimum speed for drift sound
+    constexpr float DRIFT_MIN_SPEED = 5.0f;
 
     // Audio pitch constants
-    constexpr float ENGINE_PITCH_MIN = 0.8f;          // Minimum pitch (idle)
-    constexpr float ENGINE_PITCH_MAX = 2.0f;          // Maximum pitch (max RPM)
-    constexpr float ENGINE_PITCH_RANGE = ENGINE_PITCH_MAX - ENGINE_PITCH_MIN; // 1.2
+    constexpr float ENGINE_PITCH_MIN = 0.8f;
+    constexpr float ENGINE_PITCH_MAX = 2.0f;
+    constexpr float ENGINE_PITCH_RANGE = ENGINE_PITCH_MAX - ENGINE_PITCH_MIN;
 
     // Reference speeds for audio calculation
-    constexpr float BASE_REFERENCE_SPEED = 20.0f;     // Base speed for drift sound volume
+    constexpr float BASE_REFERENCE_SPEED = 20.0f;
 
     // Asset path
     const std::string DRIFT_SOUND_PATH = "assets/tireScreech.wav";
@@ -120,8 +120,7 @@ void AudioManager::update(const Vehicle& vehicle) {
     const bool isDrifting = vehicle.isDrifting();
     const float absoluteVelocity = std::abs(vehicle.getVelocity());
 
-    // Calculate pitch based on RPM (1000-7000 RPM range)
-    // Map RPM to pitch range (0.8 - 2.0)
+    // Calculate pitch based on RPM
     constexpr float MIN_RPM = 1000.0f;
     constexpr float MAX_RPM = 7000.0f;
     float rpmRatio = (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM);
@@ -129,35 +128,31 @@ void AudioManager::update(const Vehicle& vehicle) {
 
     float pitch = ENGINE_PITCH_MIN + (rpmRatio * ENGINE_PITCH_RANGE);
 
-    // Add extra pitch boost during nitrous
     if (nitrousActive) {
         pitch *= NITROUS_PITCH_MULTIPLIER;
     }
 
     ma_sound_set_pitch(engineSound_.get(), pitch);
 
-    // Update volume based on RPM and throttle (higher RPM = louder)
-    // Reduce volume in lower gears to make it less loud
+    // Update volume based on RPM
     float baseVolume = ENGINE_IDLE_VOLUME + (rpmRatio * (ENGINE_MAX_VOLUME - ENGINE_IDLE_VOLUME));
 
-    // Volume reduction for lower gears (gear 1-2 are quieter)
+    // Volume reduction for lower gears
     float gearVolumeMultiplier = 1.0f;
     if (currentGear == 1) {
-        gearVolumeMultiplier = 0.6f;  // 40% quieter in 1st gear
+        gearVolumeMultiplier = 0.6f;
     } else if (currentGear == 2) {
-        gearVolumeMultiplier = 0.75f; // 25% quieter in 2nd gear
+        gearVolumeMultiplier = 0.75f;
     } else if (currentGear == 3) {
-        gearVolumeMultiplier = 0.9f;  // 10% quieter in 3rd gear
+        gearVolumeMultiplier = 0.9f;
     }
 
     float volume = baseVolume * gearVolumeMultiplier;
 
-    // Boost volume significantly during nitrous
     if (nitrousActive) {
         volume += NITROUS_VOLUME_BOOST;
     }
 
-    // Cap volume at maximum to prevent distortion
     volume = std::min(volume, MAX_VOLUME);
 
     ma_sound_set_volume(engineSound_.get(), volume);
@@ -165,17 +160,14 @@ void AudioManager::update(const Vehicle& vehicle) {
     // Handle drift sound
     if (driftSoundLoaded_) {
         if (isDrifting && absoluteVelocity > DRIFT_MIN_SPEED) {
-            // Start drift sound if not already playing
             if (ma_sound_is_playing(driftSound_.get()) == MA_FALSE) {
                 ma_sound_start(driftSound_.get());
             }
-            // Adjust volume based on speed - louder when drifting faster
             float driftVolume = DRIFT_SOUND_MIN_VOLUME +
                                (absoluteVelocity / BASE_REFERENCE_SPEED) * (DRIFT_SOUND_MAX_VOLUME - DRIFT_SOUND_MIN_VOLUME);
             driftVolume = std::min(driftVolume, DRIFT_SOUND_MAX_VOLUME);
             ma_sound_set_volume(driftSound_.get(), driftVolume);
         } else {
-            // Stop drift sound when not drifting or moving too slow
             if (ma_sound_is_playing(driftSound_.get()) == MA_TRUE) {
                 ma_sound_stop(driftSound_.get());
             }

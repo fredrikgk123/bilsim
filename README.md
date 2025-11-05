@@ -70,37 +70,4 @@ Players control a vehicle in a 3D environment with speed-sensitive steering, dri
 
 [12] MDN Web Docs. (2024). *2D collision detection*. Mozilla Developer Network. https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 
-## Build Instructions
-
-```bash
-# Configure (only needed once)
-cmake -B build
-
-# Build
-cmake --build build
-
-# Run the simulator
-./build/src/bilsim
-
-# Run tests
-cd build && ctest --output-on-failure
-
-# Or run test executable directly for detailed output
-./build/tests/run_tests
-```
-
 ## Project Structure
-
-```
-src/
-├── core/          # Game logic and physics
-├── graphics/      # Rendering and visualization
-├── input/         # User input handling
-├── audio/         # Sound management
-└── ui/            # User interface elements
-
-tests/
-├── test_vehicle.cpp      # Vehicle physics tests
-├── test_collision.cpp    # Collision detection tests
-└── test_gameObject.cpp   # Base class tests
-```

@@ -15,7 +15,7 @@ public:
     ObstacleManager(float playAreaSize, int treeCount);
 
     // Collision detection with vehicle
-    void handleCollisions(Vehicle& vehicle);
+    void handleCollisions(Vehicle& vehicle) const;
 
     // Access to obstacles for rendering
     [[nodiscard]] const std::vector<std::unique_ptr<Obstacle>>& getObstacles() const noexcept;

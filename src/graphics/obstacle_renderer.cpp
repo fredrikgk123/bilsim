@@ -3,18 +3,18 @@
 using namespace threepp;
 
 namespace {
-    // Wall visual constants - matches obstacle.cpp dimensions
-    constexpr float WALL_WIDTH = 5.0f;   // Length of each segment (continuous when placed side by side)
-    constexpr float WALL_HEIGHT = 5.0f;  // Height of wall
-    constexpr float WALL_DEPTH = 2.0f;   // Thickness of wall
-    constexpr unsigned int WALL_COLOR = 0x8B4513;  // Saddle brown
+    // Wall visual constants
+    constexpr float WALL_WIDTH = 5.0f;
+    constexpr float WALL_HEIGHT = 5.0f;
+    constexpr float WALL_DEPTH = 2.0f;
+    constexpr unsigned int WALL_COLOR = 0x8B4513;
 
     // Tree visual constants
     constexpr float TREE_TRUNK_RADIUS = 0.4f;
     constexpr float TREE_TRUNK_HEIGHT = 3.0f;
     constexpr float TREE_FOLIAGE_RADIUS = 2.0f;
-    constexpr unsigned int TRUNK_COLOR = 0x8B4513;  // Brown
-    constexpr unsigned int FOLIAGE_COLOR = 0x228B22;  // Forest green
+    constexpr unsigned int TRUNK_COLOR = 0x8B4513;
+    constexpr unsigned int FOLIAGE_COLOR = 0x228B22;
 }
 
 ObstacleRenderer::ObstacleRenderer(Scene& scene, const Obstacle& obstacle)

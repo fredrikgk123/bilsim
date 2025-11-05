@@ -88,7 +88,7 @@ void ObstacleManager::generateTrees(int count, float play_area_size) {
     }
 }
 
-void ObstacleManager::handleCollisions(Vehicle& vehicle) {
+void ObstacleManager::handleCollisions(Vehicle& vehicle) const {
     const auto& vehicle_pos = vehicle.getPosition();
 
     // Get vehicle radius for collision (average of width and length)

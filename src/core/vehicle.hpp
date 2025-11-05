@@ -12,6 +12,7 @@ public:
 
     // Control methods
     void accelerateForward() noexcept;
+    void accelerateForward(float multiplier) noexcept; // New overload: apply a multiplier to forward acceleration (1.0 = default)
     void accelerateBackward() noexcept;
     void turn(float amount) noexcept;
 
@@ -41,6 +42,14 @@ public:
     // Setters for collision response
     void setVelocity(float velocity) noexcept;
 
+    // Runtime scale for vehicle size (used by renderer/collisions)
+    void setScale(float scale) noexcept;
+    [[nodiscard]] float getScale() const noexcept;
+
+    // Acceleration tuning (UI can call these)
+    void setAccelerationMultiplier(float m) noexcept { accel_multiplier_ = m; }
+    [[nodiscard]] float getAccelerationMultiplier() const noexcept { return accel_multiplier_; }
+
     // Callback for resetting camera to orbit
     void setResetCameraCallback(std::function<void()> &&callback) noexcept;
 
@@ -67,6 +76,12 @@ private:
     // Gear system state
     int currentGear_;                         // Current gear (0 = reverse, 1-5 = forward gears)
     float rpm_;                               // Current engine RPM
+
+    // Runtime scale
+    float scale_ = 1.0f;
+
+    // External tuning controlled by UI (acceleration multiplier)
+    float accel_multiplier_ = 1.0f;
 
     // Callback
     std::function<void()> resetCameraCallback_;

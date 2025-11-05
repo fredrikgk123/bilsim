@@ -1,0 +1,37 @@
+# Blender 4.5.1 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl Brake_Disc
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/BrakeDisc/Brake Disc_color.png
+map_Ns toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/BrakeDisc/Brake Disc_roughness.png
+map_refl toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/BrakeDisc/Brake Disc_metallic.png
+
+newmtl RimMaterial
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Rim/WatanabeRim_color.png
+map_Ns toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Rim/WatanabeRim_roughness.png
+map_refl toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Rim/WatanabeRim_metallic.png
+map_Bump -bm 1.000000 toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Rim/WatanabeRim_normal.png
+
+newmtl TireMaterial
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Tire/Tire_color.png
+map_Ns toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Tire/Tire_roughness.png
+map_refl toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Tire/Tire_metallic.png
+map_Bump -bm 1.000000 toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Wheels/Tire/Tire_normal.png

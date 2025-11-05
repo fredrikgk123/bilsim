@@ -1,0 +1,14 @@
+# Blender 4.5.1 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl SteeringWheel
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/F/kiera/New folder/New Folder/SteeringWheel/SteeringWheel_color.png
+map_Ns toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/F/kiera/New folder/New Folder/SteeringWheel/SteeringWheel_roughness.png
+map_refl toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/F/kiera/New folder/New Folder/SteeringWheel/SteeringWheel_metallic.png
+map_d toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/F/kiera/New folder/New Folder/SteeringWheel/SteeringWheel_color.png
+map_Bump -bm 1.000000 toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/F/kiera/New folder/New Folder/SteeringWheel/SteeringWheel_normal.png

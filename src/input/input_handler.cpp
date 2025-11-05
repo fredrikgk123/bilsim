@@ -97,6 +97,7 @@ void InputHandler::onKeyReleased(KeyEvent evt) {
 void InputHandler::update(float deltaTime) {
     // Handle acceleration
     if (upPressed_) {
+        // Vehicle now owns the acceleration multiplier; use the simple API
         vehicle_.accelerateForward();
     } else if (downPressed_) {
         vehicle_.accelerateBackward();

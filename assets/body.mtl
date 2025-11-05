@@ -1,0 +1,171 @@
+# Blender 4.5.1 LTS MTL File: 'quit.blend'
+# www.blender.org
+
+newmtl Interior
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86/SimpleBake_Bakes/Interior_Bake1_pbr_diffuse.png
+map_Ns /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86/SimpleBake_Bakes/Interior_Bake1_pbr_roughness.png
+map_refl /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86/SimpleBake_Bakes/Interior_Bake1_pbr_metalness.png
+map_Bump -bm 1.000000 /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86/SimpleBake_Bakes/Interior_Bake1_pbr_normal.png
+
+newmtl InteriorPlastic
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/C:/Users/d2W81/Desktop/InteriorMaterials/InteriorPlastic1/Interior1_Base_Color.png
+map_Ns /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/C:/Users/d2W81/Desktop/InteriorMaterials/InteriorPlastic1/Interior1_Roughness.png
+map_Bump -bm 0.500000 /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/C:/Users/d2W81/Desktop/InteriorMaterials/InteriorPlastic1/Interior1_Normal.png
+
+newmtl InteriorPlastic2
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/C:/Users/d2W81/Desktop/InteriorMaterials/InteriorPlastic2/Interior2_Base_Color2.png
+map_Ns /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/C:/Users/d2W81/Desktop/InteriorMaterials/InteriorPlastic2/Interior2_Roughness.png
+map_Bump -bm 0.500000 /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/C:/Users/d2W81/Desktop/InteriorMaterials/InteriorPlastic2/Interior2_Normal.png
+
+newmtl LampCovers
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl LicensePlate
+Ns 662.004150
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Exterior/LicensePlate/LicensePlate_Color.jpeg
+map_Bump -bm 1.000000 /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86/takumilicensenormal2.jpg
+
+newmtl Mirror
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl Primary
+Ns 416.612183
+Ka 0.559091 0.559091 0.559091
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl Reflector
+Ns 548.946289
+Ka 1.000000 1.000000 1.000000
+Kd 0.447988 0.447988 0.447988
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl Seatbelt
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/Cube_color.png
+map_Ns /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/Cube_roughness.png
+map_refl /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/Cube_metallic.png
+map_Bump -bm 1.000000 /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/F:/BLENDER/3D/3DMODELS/CARS/AE86/Cube_normal.png
+
+newmtl Secondary
+Ns 416.612183
+Ka 0.559091 0.559091 0.559091
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl Shadow
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002063 0.002063 0.002063
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl TailightFrame
+Ns 0.000000
+Ka 0.722727 0.722727 0.722727
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl Trim1
+Ns 153.074936
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl Trim2
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Exterior/Trim2/Trim2_Color.png
+map_Ns /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Exterior/Trim2/Trim2_roughness.png
+map_refl /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Exterior/Trim2/Trim2_metalness.png
+map_Bump -bm 1.000000 /Users/fredrikkarlsaune/Desktop/toyota-ae86-sprinter-trueno-zenki/source/Z:/BLENDER/3DMODELS/CARS/AE86MATERIALS/DONE/Exterior/Trim2/Trim2_normal.png
+
+newmtl Trueno
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl Windows
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.253642
+illum 9
