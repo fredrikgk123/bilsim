@@ -45,9 +45,9 @@ int main() {
     // Initialize ImGui backends using the native GLFW window pointer from threepp::Canvas
     // We'll choose GLSL version depending on platform (macOS requires `#version 150`).
 #ifdef __APPLE__
-    const char* glsl_version = "#version 150";
+    const char *glsl_version = "#version 150";
 #else
-    const char* glsl_version = "#version 330 core";
+    const char *glsl_version = "#version 330 core";
 #endif
 
     // Create ImGui context early
@@ -56,8 +56,8 @@ int main() {
     }
 
     // Initialize platform/renderer backends
-    void* window_ptr = canvas.windowPtr();
-    GLFWwindow* window = static_cast<GLFWwindow*>(window_ptr);
+    void *window_ptr = canvas.windowPtr();
+    GLFWwindow *window = static_cast<GLFWwindow *>(window_ptr);
     if (window) {
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init(glsl_version);
@@ -84,8 +84,8 @@ int main() {
     ObstacleManager obstacle_manager(PLAY_AREA_SIZE, TREE_COUNT);
 
     // Create renderers for all obstacles
-    std::vector<std::unique_ptr<ObstacleRenderer>> obstacle_renderers;
-    for (const auto& obstacle : obstacle_manager.getObstacles()) {
+    std::vector<std::unique_ptr<ObstacleRenderer> > obstacle_renderers;
+    for (const auto &obstacle: obstacle_manager.getObstacles()) {
         auto renderer = std::make_unique<ObstacleRenderer>(scene_manager.getScene(), *obstacle);
         obstacle_renderers.push_back(std::move(renderer));
     }
@@ -94,8 +94,8 @@ int main() {
     PowerupManager powerup_manager(POWERUP_COUNT, PLAY_AREA_SIZE);
 
     // Create renderers for all powerups
-    std::vector<std::unique_ptr<PowerupRenderer>> powerup_renderers;
-    for (const auto& powerup : powerup_manager.getPowerups()) {
+    std::vector<std::unique_ptr<PowerupRenderer> > powerup_renderers;
+    for (const auto &powerup: powerup_manager.getPowerups()) {
         auto renderer = std::make_unique<PowerupRenderer>(scene_manager.getScene(), *powerup);
         powerup_renderers.push_back(std::move(renderer));
     }
@@ -142,7 +142,7 @@ int main() {
         powerup_manager.handleCollisions(vehicle);
 
         // Update powerup renderers
-        for (auto& powerup_renderer : powerup_renderers) {
+        for (auto &powerup_renderer: powerup_renderers) {
             powerup_renderer->update();
         }
 
@@ -154,8 +154,8 @@ int main() {
         const float drift_angle = vehicle.getDriftAngle();
 
         scene_manager.updateCameraFollowTarget(vehicle_position[0], vehicle_position[1], vehicle_position[2],
-                                              vehicle_rotation, vehicle_scale, vehicle.isNitrousActive(),
-                                              vehicle_velocity, drift_angle);
+                                               vehicle_rotation, vehicle_scale, vehicle.isNitrousActive(),
+                                               vehicle_velocity, drift_angle);
         scene_manager.updateMinimapCamera(vehicle_position[0], vehicle_position[2], vehicle_scale);
 
         // Update camera FOV based on speed and nitrous state (speed FOV effect)
@@ -166,8 +166,8 @@ int main() {
             audio_manager.update(vehicle);
         }
 
-        GLRenderer& gl_renderer = scene_manager.getRenderer();
-        const WindowSize& window_size = canvas.size();
+        GLRenderer &gl_renderer = scene_manager.getRenderer();
+        const WindowSize &window_size = canvas.size();
 
         // Render main view
         gl_renderer.setViewport(0, 0, window_size.width(), window_size.height());
@@ -199,7 +199,6 @@ int main() {
         // Render ImGui draw data via backend
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
     });
 
     // Shutdown ImGui backends and context
