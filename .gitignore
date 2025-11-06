@@ -12,7 +12,6 @@ out/
 
 # Compiled files
 *.o
-*.obj
 *.exe
 *.out
 *.app
