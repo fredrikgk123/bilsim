@@ -72,7 +72,6 @@ if(NOT miniaudio_POPULATED)
 endif()
 
 add_subdirectory(src)
-target_link_libraries(bilsim PUBLIC threepp::threepp imgui)
 
 
 # Enable testing

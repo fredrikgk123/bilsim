@@ -11,4 +11,6 @@ target_link_libraries(bilsim PUBLIC
         input
         ui
         audio
+        threepp::threepp
+        imgui
 )
