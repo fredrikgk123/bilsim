@@ -1,6 +1,7 @@
 #include "vehicle_renderer.hpp"
 #include <threepp/loaders/OBJLoader.hpp>
 #include <algorithm>
+#include <cmath>
 
 using namespace threepp;
 
