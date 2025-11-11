@@ -33,6 +33,24 @@ inline constexpr float DRIFT_ANGLE_MULTIPLIER = 1.2f;
 inline constexpr float DRIFT_EXIT_RETENTION = 0.5f;
 inline constexpr float DRIFT_DECAY_RATE = 0.95f;
 
+// Turn rate calculation curve constants
+inline constexpr float TURN_RATE_EXTREMELY_LOW_BASE = 0.05f;
+inline constexpr float TURN_RATE_EXTREMELY_LOW_RANGE = 0.1f;
+inline constexpr float TURN_RATE_EXTREMELY_LOW_DIVISOR = 0.2f;
+
+inline constexpr float TURN_RATE_VERY_LOW_BASE = 0.15f;
+inline constexpr float TURN_RATE_VERY_LOW_RANGE = 0.35f;
+inline constexpr float TURN_RATE_VERY_LOW_DIVISOR = 2.7f;
+
+inline constexpr float TURN_RATE_LOW_MEDIUM_BASE = 0.5f;
+inline constexpr float TURN_RATE_LOW_MEDIUM_RANGE = 0.5f;
+inline constexpr float TURN_RATE_LOW_MEDIUM_DIVISOR = 12.0f;
+
+inline constexpr float TURN_RATE_HIGH_SPEED_BASE = 1.0f;
+inline constexpr float TURN_RATE_HIGH_SPEED_REDUCTION = 0.4f;
+inline constexpr float TURN_RATE_HIGH_SPEED_MIN = 0.6f;
+inline constexpr float TURN_RATE_HIGH_SPEED_MAX = 1.0f;
+
 // Gear system constants
 inline constexpr int NUM_GEARS = 5;
 inline constexpr float GEAR_SHIFT_UP_RPM = 6000.0f;
