@@ -94,10 +94,11 @@ bool AudioManager::initialize(std::string_view engineSoundPath) {
     result = ma_sound_init_from_file(engine_.get(), DRIFT_SOUND_PATH.c_str(),
                                      MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
                                      nullptr, nullptr, driftSnd.get());
-        std::cerr << "Warning: Failed to load drift sound from: " << DRIFT_SOUND_PATH << " (error: " << result << ")" << std::endl;
 
     if (result != MA_SUCCESS) {
-        // driftSnd will be automatically cleaned up
+        std::cerr << "Warning: Failed to load drift sound from: " << DRIFT_SOUND_PATH << " (error: " << result << ")" << std::endl;
+        return false;
+
     } else {
         driftSound_ = std::move(driftSnd);
         ma_sound_set_looping(driftSound_.get(), MA_TRUE);
