@@ -2,8 +2,9 @@
 #include "miniaudio.h"
 #include "audio_manager.hpp"
 #include "../core/interfaces/IVehicleState.hpp"
+#undef min
+#undef max
 #include <algorithm>
-#include <cmath>
 #include <iostream>
 
 namespace {
