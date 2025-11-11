@@ -17,7 +17,7 @@ static inline ImU32 toU32(const ImVec4 &c) noexcept {
 // Convert degrees to radians (constexpr helper)
 static inline constexpr float deg2rad(float deg) noexcept { return deg * 0.017453292519943295769f; }
 
-void ImGuiLayer::render(const Vehicle& vehicle, const threepp::WindowSize& size) {
+void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize& size) {
     if (!ImGui::GetCurrentContext()) return;
 
     // HUD constants
@@ -152,8 +152,8 @@ void ImGuiLayer::render(const Vehicle& vehicle, const threepp::WindowSize& size)
     const int h = size.height();
 
     // Smooth needles (interpolate towards target ratios)
-    displayed_speed_ratio_ += (speed_ratio - displayed_speed_ratio_) * smoothing_alpha_;
-    displayed_rpm_ratio_ += (rpm_ratio - displayed_rpm_ratio_) * smoothing_alpha_;
+    displayedSpeedRatio_ += (speed_ratio - displayedSpeedRatio_) * smoothingAlpha_;
+    displayedRpmRatio_ += (rpm_ratio - displayedRpmRatio_) * smoothingAlpha_;
 
     // Adaptive gauge sizing based on the window's minimum dimension
     const float minDim = std::min(static_cast<float>(w), static_cast<float>(h));
@@ -182,11 +182,11 @@ void ImGuiLayer::render(const Vehicle& vehicle, const threepp::WindowSize& size)
     {
         char speedbuf[32] = {0};
         std::snprintf(speedbuf, sizeof(speedbuf), "%d", static_cast<int>(std::round(speed_kmh)));
-        drawGauge(rightCenter, gaugeRadius, displayed_speed_ratio_, "km/h", speedbuf, toU32(ImVec4(0.2f, 0.9f, 0.2f, 1.0f)), MAX_DISPLAY_SPEED_KMH);
+        drawGauge(rightCenter, gaugeRadius, displayedSpeedRatio_, "km/h", speedbuf, toU32(ImVec4(0.2f, 0.9f, 0.2f, 1.0f)), MAX_DISPLAY_SPEED_KMH);
 
         char rpmbuf[32] = {0};
         std::snprintf(rpmbuf, sizeof(rpmbuf), "%d", static_cast<int>(std::round(rpm)));
-        drawGauge(leftCenter, gaugeRadius, displayed_rpm_ratio_, "RPM", rpmbuf, toU32(ImVec4(1.0f, 0.6f, 0.0f, 1.0f)), MAX_RPM);
+        drawGauge(leftCenter, gaugeRadius, displayedRpmRatio_, "RPM", rpmbuf, toU32(ImVec4(1.0f, 0.6f, 0.0f, 1.0f)), MAX_RPM);
     }
 
     // Gear display: moved inside the RPM (left) gauge for a typical car HUD
