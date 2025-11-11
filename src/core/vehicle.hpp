@@ -4,6 +4,7 @@
 #include "game_object.hpp"
 #include "interfaces/IVehicleState.hpp"
 #include "interfaces/IControllable.hpp"
+#include <algorithm>
 
 class Vehicle : public GameObject, public IVehicleState, public IControllable {
 public:
