@@ -1,11 +1,14 @@
 #include "game.hpp"
+#include "game_config.hpp"
 #include "logger.hpp"
 #include <iostream>
 
 Game::Game(threepp::Canvas& canvas)
     : canvas_(canvas),
       audioEnabled_(true),
-      clock_() {
+      clock_(),
+      lastWindowWidth_(0),
+      lastWindowHeight_(0) {
 }
 
 void Game::initialize() {
@@ -37,22 +40,34 @@ void Game::initializeScene() {
 }
 
 void Game::initializeVehicle() {
-    // Create vehicle at origin
-    vehicle_ = std::make_unique<Vehicle>();
+    // Create vehicle at spawn point
+    vehicle_ = std::make_unique<Vehicle>(
+        GameConfig::World::SPAWN_POINT_X,
+        GameConfig::World::SPAWN_POINT_Y,
+        GameConfig::World::SPAWN_POINT_Z
+    );
 
     // Create vehicle renderer
     vehicleRenderer_ = std::make_unique<VehicleRenderer>(sceneManager_->getScene(), *vehicle_);
 
-    // Load vehicle model
-    if (!vehicleRenderer_->loadModel("assets/body.obj")) {
-        Logger::warning("Failed to load vehicle model, using fallback");
-        std::cerr << "Warning: Failed to load vehicle model, using fallback" << std::endl;
-    }
+    // Load custom model
+    vehicleRenderer_->loadModel(GameConfig::Assets::CAR_MODEL_PATH);
+
+    // Apply scale to the vehicle renderer
+    vehicleRenderer_->applyScale(vehicle_->getScale());
+
+    // Set up reset callback
+    vehicle_->setResetCameraCallback([this]() {
+        sceneManager_->setCameraMode(CameraMode::FOLLOW);
+    });
 }
 
 void Game::initializeObstacles() {
-    // Create obstacle manager with play area size and tree count
-    obstacleManager_ = std::make_unique<ObstacleManager>(100.0f, 5);
+    // Create obstacle manager
+    obstacleManager_ = std::make_unique<ObstacleManager>(
+        GameConfig::World::PLAY_AREA_SIZE,
+        GameConfig::Obstacle::DEFAULT_TREE_COUNT
+    );
 
     // Get obstacles from manager
     const auto& obstacles = obstacleManager_->getObstacles();
@@ -60,13 +75,17 @@ void Game::initializeObstacles() {
     // Create renderers for all obstacles
     for (const auto& obstacle : obstacles) {
         auto renderer = std::make_unique<ObstacleRenderer>(sceneManager_->getScene(), *obstacle);
+        renderer->update(); // Set initial position
         obstacleRenderers_.push_back(std::move(renderer));
     }
 }
 
 void Game::initializePowerups() {
-    // Create powerup manager with count and play area size
-    powerupManager_ = std::make_unique<PowerupManager>(3, 100.0f);
+    // Create powerup manager
+    powerupManager_ = std::make_unique<PowerupManager>(
+        GameConfig::Powerup::DEFAULT_COUNT,
+        GameConfig::World::PLAY_AREA_SIZE
+    );
 
     // Get powerups from manager
     const auto& powerups = powerupManager_->getPowerups();
@@ -74,6 +93,7 @@ void Game::initializePowerups() {
     // Create renderers for all powerups
     for (const auto& powerup : powerups) {
         auto renderer = std::make_unique<PowerupRenderer>(sceneManager_->getScene(), *powerup);
+        renderer->update(); // Set initial position
         powerupRenderers_.push_back(std::move(renderer));
     }
 }
@@ -111,6 +131,16 @@ void Game::initializeUI() {
 }
 
 void Game::update(float deltaTime) {
+    // Check for window resize
+    auto size = canvas_.size();
+    if (size.width() != lastWindowWidth_ || size.height() != lastWindowHeight_) {
+        lastWindowWidth_ = size.width();
+        lastWindowHeight_ = size.height();
+        if (sceneManager_) {
+            sceneManager_->resize(size);
+        }
+    }
+
     updateGameState(deltaTime);
     updateCamera();
     updateAudio();
@@ -133,17 +163,30 @@ void Game::updateGameState(float deltaTime) {
                                 inputHandler_ ? inputHandler_->isRightPressed() : false);
     }
 
+    // Handle collisions
+    if (obstacleManager_ && vehicle_) {
+        obstacleManager_->handleCollisions(*vehicle_);
+    }
+
+    // Update powerups (rotation animation, etc.)
+    if (powerupManager_) {
+        powerupManager_->update(deltaTime);
+    }
+
     // Check for powerup collisions
     if (powerupManager_ && vehicle_) {
         powerupManager_->handleCollisions(*vehicle_);
     }
 
-    // Update powerup renderers
+    // Update powerup renderers (powerups can move/rotate)
     for (auto& renderer : powerupRenderers_) {
         if (renderer) {
             renderer->update();
         }
     }
+
+    // Note: Obstacle renderers are NOT updated here - they're static and only
+    // need update() called once during initialization
 }
 
 void Game::updateCamera() {
@@ -177,21 +220,50 @@ void Game::render() {
 }
 
 void Game::renderMainView() {
-    if (sceneManager_) {
-        sceneManager_->render();
-    }
+    if (!sceneManager_) return;
+
+    auto& renderer = sceneManager_->getRenderer();
+    auto size = canvas_.size();
+
+    // Set viewport for main view (full window)
+    renderer.setViewport(0, 0, size.width(), size.height());
+    renderer.setScissor(0, 0, size.width(), size.height());
+    renderer.setScissorTest(false);
+
+    // Render main scene with main camera
+    sceneManager_->render();
 }
 
 void Game::renderMinimap() {
-    if (sceneManager_) {
-        sceneManager_->renderMinimap();
-    }
+    if (!sceneManager_) return;
+
+    auto& renderer = sceneManager_->getRenderer();
+    auto size = canvas_.size();
+
+    // Minimap is 20% of window height, minimum 150px
+    const int minimapSize = std::max(150, size.height() / 5);
+    const int minimapX = GameConfig::UI::MINIMAP_PADDING;
+    const int minimapY = size.height() - minimapSize - GameConfig::UI::MINIMAP_PADDING;
+
+    renderer.setViewport(minimapX, minimapY, minimapSize, minimapSize);
+    renderer.setScissor(minimapX, minimapY, minimapSize, minimapSize);
+    renderer.setScissorTest(true);
+
+    sceneManager_->renderMinimap();
+
+    renderer.setScissorTest(false);
 }
 
 void Game::renderUI() {
-    if (imguiLayer_ && vehicle_) {
-        auto size = canvas_.size();
-        imguiLayer_->render(*vehicle_, size);
-    }
+    if (!imguiLayer_ || !vehicle_) return;
+
+    auto& renderer = sceneManager_->getRenderer();
+    auto size = canvas_.size();
+
+    // Reset viewport for UI overlay (full window)
+    renderer.setViewport(0, 0, size.width(), size.height());
+
+    // Render ImGui overlay
+    imguiLayer_->render(*vehicle_, size);
 }
 

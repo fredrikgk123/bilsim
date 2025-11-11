@@ -79,5 +79,9 @@ private:
     // State
     bool audioEnabled_;
     threepp::Clock clock_;
+
+    // Window size tracking for resize detection
+    int lastWindowWidth_;
+    int lastWindowHeight_;
 };
 

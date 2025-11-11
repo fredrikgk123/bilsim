@@ -276,13 +276,11 @@ void SceneManager::updateMinimapCamera(float targetX, float targetZ, float vehic
     minimapCamera_->position.set(targetX, MINIMAP_HEIGHT, targetZ);
     minimapCamera_->lookAt(targetX, 0.0f, targetZ);
 
-    // Optionally adjust minimap zoom based on vehicle scale
-    // Larger vehicles get a slightly wider view
+    // Scale view based on vehicle scale only
     const float scaledViewSize = BASE_MINIMAP_VIEW_SIZE * (1.0f + (vehicleScale - 1.0f) * MINIMAP_SCALE_MULTIPLIER);
-    const float aspectRatio = minimapCamera_->right / minimapCamera_->top;
 
-    minimapCamera_->left = -scaledViewSize * aspectRatio;
-    minimapCamera_->right = scaledViewSize * aspectRatio;
+    minimapCamera_->left = -scaledViewSize;
+    minimapCamera_->right = scaledViewSize;
     minimapCamera_->top = scaledViewSize;
     minimapCamera_->bottom = -scaledViewSize;
     minimapCamera_->updateProjectionMatrix();
