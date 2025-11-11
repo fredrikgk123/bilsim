@@ -24,10 +24,10 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
     constexpr float MAX_DISPLAY_SPEED_KMH = 150.0f;
     constexpr float MAX_RPM = 7000.0f;
 
-    const float speed_kmh = std::abs(vehicle.getVelocity()) * 3.6f;
-    const float speed_ratio = std::clamp(speed_kmh / MAX_DISPLAY_SPEED_KMH, 0.0f, 1.0f);
+    const float speedKmh = std::abs(vehicle.getVelocity()) * 3.6f;
+    const float speedRatio = std::clamp(speedKmh / MAX_DISPLAY_SPEED_KMH, 0.0f, 1.0f);
     const float rpm = vehicle.getRPM();
-    const float rpm_ratio = std::clamp(rpm / MAX_RPM, 0.0f, 1.0f);
+    const float rpmRatio = std::clamp(rpm / MAX_RPM, 0.0f, 1.0f);
     const int gear = vehicle.getCurrentGear();
 
     ImDrawList* dl = ImGui::GetForegroundDrawList();
@@ -152,8 +152,8 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
     const int h = size.height();
 
     // Smooth needles (interpolate towards target ratios)
-    displayedSpeedRatio_ += (speed_ratio - displayedSpeedRatio_) * smoothingAlpha_;
-    displayedRpmRatio_ += (rpm_ratio - displayedRpmRatio_) * smoothingAlpha_;
+    displayedSpeedRatio_ += (speedRatio - displayedSpeedRatio_) * smoothingAlpha_;
+    displayedRpmRatio_ += (rpmRatio - displayedRpmRatio_) * smoothingAlpha_;
 
     // Adaptive gauge sizing based on the window's minimum dimension
     const float minDim = std::min(static_cast<float>(w), static_cast<float>(h));
@@ -181,7 +181,7 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
     // Draw RPM (left) and Speed (right) using smoothed ratio
     {
         char speedbuf[32] = {0};
-        std::snprintf(speedbuf, sizeof(speedbuf), "%d", static_cast<int>(std::round(speed_kmh)));
+        std::snprintf(speedbuf, sizeof(speedbuf), "%d", static_cast<int>(std::round(speedKmh)));
         drawGauge(rightCenter, gaugeRadius, displayedSpeedRatio_, "km/h", speedbuf, toU32(ImVec4(0.2f, 0.9f, 0.2f, 1.0f)), MAX_DISPLAY_SPEED_KMH);
 
         char rpmbuf[32] = {0};

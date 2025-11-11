@@ -28,10 +28,10 @@ int main() {
 
         // Main game loop
         canvas.animate([&game] {
-            float delta_time = game.getClock().getDelta();
+            float deltaTime = game.getClock().getDelta();
 
             // Update game state
-            game.update(delta_time);
+            game.update(deltaTime);
 
             // Start ImGui frame
             ImGuiContext::newFrame();
