@@ -1,55 +1,58 @@
 #pragma once
 
-#include <array>
-#include <cmath>
 #include <functional>
 #include "game_object.hpp"
+#include "interfaces/IVehicleState.hpp"
+#include "interfaces/IControllable.hpp"
 
-class Vehicle : public GameObject {
+class Vehicle : public GameObject, public IVehicleState, public IControllable {
 public:
     // Constructor - takes x, y, z starting position
-    Vehicle(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+    explicit Vehicle(float x = 0.0f, float y = 0.0f, float z = 0.0f);
 
-    // Control methods
-    void accelerateForward() noexcept;
+    // Control methods (implement IControllable)
+    void accelerateForward() noexcept override;
     void accelerateForward(float multiplier) noexcept; // New overload: apply a multiplier to forward acceleration (1.0 = default)
-    void accelerateBackward() noexcept;
-    void turn(float amount) noexcept;
+    void accelerateBackward() noexcept override;
+    void turn(float amount) noexcept override;
 
-    // Drift methods
-    void startDrift() noexcept;
-    void stopDrift() noexcept;
-    [[nodiscard]] bool isDrifting() const noexcept;
+    // Drift methods (implement IControllable)
+    void startDrift() noexcept override;
+    void stopDrift() noexcept override;
+    [[nodiscard]] bool isDrifting() const noexcept override;
 
-    // Nitrous methods
-    void activateNitrous() noexcept;
+    // Nitrous methods (implement IControllable)
+    void activateNitrous() noexcept override;
     void pickupNitrous() noexcept;
-    [[nodiscard]] bool hasNitrous() const noexcept;
-    [[nodiscard]] bool isNitrousActive() const noexcept;
-    [[nodiscard]] float getNitrousTimeRemaining() const noexcept;
+    [[nodiscard]] bool hasNitrous() const noexcept override;
+    [[nodiscard]] bool isNitrousActive() const noexcept override;
+    [[nodiscard]] float getNitrousTimeRemaining() const noexcept override;
 
     // Override from GameObject
     void update(float deltaTime) override;
     void reset() override;
 
-    // Getters
-    [[nodiscard]] float getVelocity() const noexcept;
-    [[nodiscard]] float getMaxSpeed() const noexcept;
-    [[nodiscard]] float getDriftAngle() const noexcept;  // Get current drift angle for camera
-    [[nodiscard]] int getCurrentGear() const noexcept;   // Get current gear number
-    [[nodiscard]] float getRPM() const noexcept;         // Get current engine RPM (for UI/audio)
-    [[nodiscard]] float getSteeringInput() const noexcept; // Get current steering input (-1 to 1)
+    // Getters (implement IVehicleState)
+    [[nodiscard]] float getVelocity() const noexcept override;
+    [[nodiscard]] static float getMaxSpeed() noexcept;
+    [[nodiscard]] float getDriftAngle() const noexcept override;  // Get current drift angle for camera
+    [[nodiscard]] int getCurrentGear() const noexcept override;   // Get current gear number
+    [[nodiscard]] float getRPM() const noexcept override;         // Get current engine RPM (for UI/audio)
+    [[nodiscard]] float getSteeringInput() const noexcept override; // Get current steering input (-1 to 1)
 
     // Setters for collision response
     void setVelocity(float velocity) noexcept;
 
     // Runtime scale for vehicle size (used by renderer/collisions)
     void setScale(float scale) noexcept;
-    [[nodiscard]] float getScale() const noexcept;
+    [[nodiscard]] float getScale() const noexcept override;
 
     // Acceleration tuning (UI can call these)
-    void setAccelerationMultiplier(float m) noexcept { accel_multiplier_ = m; }
-    [[nodiscard]] float getAccelerationMultiplier() const noexcept { return accel_multiplier_; }
+    void setAccelerationMultiplier(float m) noexcept {
+        // Clamp to reasonable range (0.1x to 5x)
+        accelMultiplier_ = std::clamp(m, 0.1f, 5.0f);
+    }
+    [[nodiscard]] float getAccelerationMultiplier() const noexcept { return accelMultiplier_; }
 
     // Callback for resetting camera to orbit
     void setResetCameraCallback(std::function<void()> &&callback) noexcept;
@@ -61,6 +64,14 @@ private:
     // Gear system methods
     void updateGearShifting() noexcept;
     [[nodiscard]] float getGearAccelerationMultiplier() const noexcept;
+
+    // Update helper methods (extract from monolithic update())
+    void updateNitrous(float deltaTime) noexcept;
+    void updateVelocity(float deltaTime) noexcept;
+    void updateRPM() noexcept;
+    void updateDrift(float deltaTime) noexcept;
+    void updatePosition(float deltaTime) noexcept;
+    void decayAcceleration() noexcept;
 
     float velocity_;                          // Current speed
     float acceleration_;                      // Current acceleration
@@ -83,7 +94,7 @@ private:
     float scale_ = 1.0f;
 
     // External tuning controlled by UI (acceleration multiplier)
-    float accel_multiplier_ = 1.0f;
+    float accelMultiplier_ = 1.0f;
 
     // Callback
     std::function<void()> resetCameraCallback_;
