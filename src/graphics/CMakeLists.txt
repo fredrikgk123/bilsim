@@ -16,6 +16,7 @@ add_library(graphics
 target_include_directories(graphics PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/src  # Add parent src directory for cross-module includes
+        ${CMAKE_SOURCE_DIR}/src/core/interfaces  # Add interfaces directory
 )
 
 # Link against the core library for Vehicle class access

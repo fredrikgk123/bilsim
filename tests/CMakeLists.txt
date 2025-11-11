@@ -3,6 +3,7 @@ add_executable(run_tests
     test_vehicle.cpp
     test_gameObject.cpp
     test_collision.cpp
+    test_validation.cpp
 )
 
 # Link against core library and Catch2

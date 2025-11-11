@@ -12,8 +12,14 @@ add_library(core
     obstacle.hpp
     obstacle_manager.cpp
     obstacle_manager.hpp
+    game.cpp
+    game.hpp
 )
 
 target_include_directories(core PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
 )
+
+target_link_libraries(core PUBLIC threepp::threepp)
+

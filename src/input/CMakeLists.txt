@@ -7,6 +7,7 @@ add_library(input
 # Make headers available to other directories
 target_include_directories(input PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/src/core/interfaces  # Add interfaces directory
 )
 
 # Link against the core library for Vehicle class access
