@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numbers>
+#include "object_sizes.hpp"
 
 namespace VehicleTuning {
 
@@ -19,10 +20,10 @@ inline constexpr float NITROUS_DURATION = 5.0f;
 inline constexpr float NITROUS_ACCELERATION = 14.0f;
 inline constexpr float NITROUS_MAX_SPEED = 69.44f;
 
-// Vehicle dimensions
-inline constexpr float VEHICLE_WIDTH = 1.0f;
-inline constexpr float VEHICLE_HEIGHT = 0.5f;
-inline constexpr float VEHICLE_LENGTH = 2.0f;
+// Vehicle dimensions (using common object sizes)
+inline constexpr float VEHICLE_WIDTH = ObjectSizes::VEHICLE_WIDTH;
+inline constexpr float VEHICLE_HEIGHT = ObjectSizes::VEHICLE_HEIGHT;
+inline constexpr float VEHICLE_LENGTH = ObjectSizes::VEHICLE_LENGTH;
 
 // Turn rate calculation constants
 inline constexpr float TURN_RATE_MIN_SPEED = 0.3f;
@@ -54,4 +55,3 @@ inline constexpr float TWO_PI = 2.0f * PI;
 inline constexpr float INITIAL_ROTATION_RADIANS = PI;
 
 } // namespace VehicleTuning
-
