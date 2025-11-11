@@ -1,14 +1,5 @@
 #include "obstacle.hpp"
-
-namespace {
-    // Obstacle size constants
-    constexpr float WALL_LENGTH = 5.0f;
-    constexpr float WALL_HEIGHT = 5.0f;
-    constexpr float WALL_THICKNESS = 2.0f;
-
-    constexpr float TREE_COLLISION_RADIUS = 0.5f;
-    constexpr float TREE_HEIGHT = 6.0f;
-}
+#include "object_sizes.hpp"
 
 Obstacle::Obstacle(float x, float y, float z, ObstacleType type, WallOrientation orientation)
     : GameObject(x, y, z), type_(type), orientation_(orientation) {
@@ -18,14 +9,14 @@ Obstacle::Obstacle(float x, float y, float z, ObstacleType type, WallOrientation
         // Walls have different dimensions based on orientation
         if (orientation_ == WallOrientation::HORIZONTAL) {
             // Horizontal walls (North/South): extend along X axis
-            size_ = {WALL_LENGTH, WALL_HEIGHT, WALL_THICKNESS};
+            size_ = {ObjectSizes::WALL_LENGTH, ObjectSizes::WALL_HEIGHT, ObjectSizes::WALL_THICKNESS};
         } else {
             // Vertical walls (East/West): extend along Z axis
-            size_ = {WALL_THICKNESS, WALL_HEIGHT, WALL_LENGTH};
+            size_ = {ObjectSizes::WALL_THICKNESS, ObjectSizes::WALL_HEIGHT, ObjectSizes::WALL_LENGTH};
         }
     } else if (type_ == ObstacleType::TREE) {
         // Use smaller diameter for collision detection - easier to navigate
-        size_ = {TREE_COLLISION_RADIUS * 2.0f, TREE_HEIGHT, TREE_COLLISION_RADIUS * 2.0f};
+        size_ = {ObjectSizes::TREE_COLLISION_RADIUS * 2.0f, ObjectSizes::TREE_HEIGHT, ObjectSizes::TREE_COLLISION_RADIUS * 2.0f};
     }
 }
 
