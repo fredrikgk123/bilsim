@@ -1,4 +1,5 @@
 #include "imgui_layer.hpp"
+#include "../core/vehicle_tuning.hpp"
 #include <imgui.h>
 #include <cmath>
 #include <algorithm>
@@ -213,7 +214,7 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
 
         if (vehicle.isNitrousActive()) {
             const float remaining = vehicle.getNitrousTimeRemaining();
-            const float ratio = std::clamp(remaining / 5.0f, 0.0f, 1.0f);
+            const float ratio = std::clamp(remaining / VehicleTuning::NITROUS_DURATION, 0.0f, 1.0f);
             const float a1n = deg2rad(-90.0f);
             const float a2n = deg2rad(-90.0f + 360.0f * ratio);
             dl->PathClear();

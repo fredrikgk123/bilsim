@@ -76,24 +76,30 @@ float Vehicle::calculateTurnRate() const noexcept {
 
     // Extremely low speeds (0.1-0.3 m/s / ~0.4-1.1 km/h): very minimal turning
     if (absoluteVelocity < VehicleTuning::TURN_RATE_MIN_SPEED) {
-        return 0.05f + ((absoluteVelocity - VehicleTuning::MIN_SPEED_THRESHOLD) / 0.2f) * 0.1f;
+        return VehicleTuning::TURN_RATE_EXTREMELY_LOW_BASE +
+               ((absoluteVelocity - VehicleTuning::MIN_SPEED_THRESHOLD) / VehicleTuning::TURN_RATE_EXTREMELY_LOW_DIVISOR) *
+               VehicleTuning::TURN_RATE_EXTREMELY_LOW_RANGE;
     }
 
     // Very low speeds (0.3-3 m/s / ~1.1-11 km/h): minimal but usable turning
     if (absoluteVelocity < VehicleTuning::TURN_RATE_LOW_SPEED) {
-        return 0.15f + ((absoluteVelocity - VehicleTuning::TURN_RATE_MIN_SPEED) / 2.7f) * 0.35f;
+        return VehicleTuning::TURN_RATE_VERY_LOW_BASE +
+               ((absoluteVelocity - VehicleTuning::TURN_RATE_MIN_SPEED) / VehicleTuning::TURN_RATE_VERY_LOW_DIVISOR) *
+               VehicleTuning::TURN_RATE_VERY_LOW_RANGE;
     }
 
     // Low to medium speeds (3-15 m/s / ~11-54 km/h): good turning capability
     if (absoluteVelocity < VehicleTuning::TURN_RATE_MEDIUM_SPEED) {
-        return 0.5f + ((absoluteVelocity - VehicleTuning::TURN_RATE_LOW_SPEED) / 12.0f) * 0.5f;
+        return VehicleTuning::TURN_RATE_LOW_MEDIUM_BASE +
+               ((absoluteVelocity - VehicleTuning::TURN_RATE_LOW_SPEED) / VehicleTuning::TURN_RATE_LOW_MEDIUM_DIVISOR) *
+               VehicleTuning::TURN_RATE_LOW_MEDIUM_RANGE;
     }
 
     // High speeds (15+ m/s / 54+ km/h): reduced turn rate for realism
     const float speedRatio = (absoluteVelocity - VehicleTuning::TURN_RATE_MEDIUM_SPEED) / (VehicleTuning::MAX_SPEED - VehicleTuning::TURN_RATE_MEDIUM_SPEED);
-    const float turnRate = 1.0f - (speedRatio * 0.4f);  // Reduces to 60% at max speed
+    const float turnRate = VehicleTuning::TURN_RATE_HIGH_SPEED_BASE - (speedRatio * VehicleTuning::TURN_RATE_HIGH_SPEED_REDUCTION);
 
-    return std::clamp(turnRate, 0.6f, 1.0f);
+    return std::clamp(turnRate, VehicleTuning::TURN_RATE_HIGH_SPEED_MIN, VehicleTuning::TURN_RATE_HIGH_SPEED_MAX);
 }
 
 void Vehicle::activateNitrous() noexcept {

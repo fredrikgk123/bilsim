@@ -1,6 +1,8 @@
 #include "input_handler.hpp"
+#include "../core/vehicle_tuning.hpp"
 
 using namespace threepp;
+
 
 InputHandler::InputHandler(IControllable& controllable, SceneManager& sceneManager)
     : controllable_(controllable),
@@ -147,7 +149,7 @@ void InputHandler::updateCamera() {
     } else if (rightArrowPressed_) {
         sceneManager_.setCameraYawTarget(-1.0f);
     } else if (downArrowPressed_) {
-        sceneManager_.setCameraYaw(3.14159f);
+        sceneManager_.setCameraYaw(VehicleTuning::PI);
     } else {
         sceneManager_.setCameraYaw(0.0f);
     }

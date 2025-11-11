@@ -240,8 +240,8 @@ void Game::renderMinimap() {
     auto& renderer = sceneManager_->getRenderer();
     auto size = canvas_.size();
 
-    // Minimap is 20% of window height, minimum 150px
-    const int minimapSize = std::max(150, size.height() / 5);
+    // Fixed minimap size
+    const int minimapSize = GameConfig::UI::MINIMAP_SIZE;
     const int minimapX = GameConfig::UI::MINIMAP_PADDING;
     const int minimapY = size.height() - minimapSize - GameConfig::UI::MINIMAP_PADDING;
 

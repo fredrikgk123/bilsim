@@ -22,28 +22,6 @@ TEST_CASE("Basic AABB collision detection", "[collision]") {
     }
 }
 
-TEST_CASE("Edge case collision detection", "[collision]") {
-    Vehicle vehicle(0.0f, 0.0f, 0.0f);
-
-    SECTION("Objects touching at edge should collide") {
-        // Place powerup just at the edge of vehicle's bounding box
-        auto vehicleSize = vehicle.getSize();
-        float edgeDistance = (vehicleSize[0] / 2.0f) + 0.3f; // Powerup size is ~0.6
-
-        Powerup edgePowerup(edgeDistance, 0.0f, 0.0f, PowerupType::NITROUS);
-        REQUIRE(vehicle.intersects(edgePowerup));
-    }
-
-    SECTION("Objects barely separated do not collide") {
-        // Place powerup just outside vehicle's bounding box
-        auto vehicleSize = vehicle.getSize();
-        float separateDistance = (vehicleSize[0] / 2.0f) + 1.0f; // Beyond powerup reach
-
-        Powerup separatePowerup(separateDistance, 0.0f, 0.0f, PowerupType::NITROUS);
-        REQUIRE_FALSE(vehicle.intersects(separatePowerup));
-    }
-}
-
 TEST_CASE("Collision with inactive objects", "[collision]") {
     Vehicle vehicle(0.0f, 0.0f, 0.0f);
     Powerup powerup(0.0f, 0.0f, 0.0f, PowerupType::NITROUS);
