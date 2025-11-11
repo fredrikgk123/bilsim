@@ -1,13 +1,9 @@
 #include "powerup_manager.hpp"
-#include <random>
+#include "game_config.hpp"
+#include "random_position_generator.hpp"
 
-namespace {
-    constexpr float POWERUP_SPAWN_MARGIN = 10.0f;  // Distance from play area edges
-    constexpr float POWERUP_HEIGHT = 0.4f;         // Fixed height above ground
-}
 
-PowerupManager::PowerupManager(int count, float playAreaSize)
-    : randomEngine_(std::random_device{}()) {
+PowerupManager::PowerupManager(int count, float playAreaSize) {
     generatePowerups(count, playAreaSize);
 }
 
@@ -15,19 +11,15 @@ void PowerupManager::generatePowerups(int count, float playAreaSize) {
     // Clear any existing powerups
     powerups_.clear();
 
-    // Setup random distribution for positions
-    float minPos = -(playAreaSize / 2.0f) + POWERUP_SPAWN_MARGIN;
-    float maxPos = (playAreaSize / 2.0f) - POWERUP_SPAWN_MARGIN;
-
-    std::uniform_real_distribution<float> posDistribution(minPos, maxPos);
+    // Create position generator with spawn margin
+    RandomPositionGenerator posGen(playAreaSize, GameConfig::Powerup::SPAWN_MARGIN);
 
     // Generate random powerups
     for (int i = 0; i < count; ++i) {
-        float x = posDistribution(randomEngine_);
-        float z = posDistribution(randomEngine_);
+        auto pos = posGen.getRandomPosition();
 
         // For now, all powerups are NITROUS type
-        auto powerup = std::make_unique<Powerup>(x, POWERUP_HEIGHT, z, PowerupType::NITROUS);
+        auto powerup = std::make_unique<Powerup>(pos[0], GameConfig::Powerup::HEIGHT, pos[1], PowerupType::NITROUS);
         powerups_.push_back(std::move(powerup));
     }
 }
@@ -65,4 +57,8 @@ void PowerupManager::reset() noexcept {
 
 const std::vector<std::unique_ptr<Powerup>>& PowerupManager::getPowerups() const noexcept {
     return powerups_;
+}
+
+size_t PowerupManager::getCount() const {
+    return powerups_.size();
 }

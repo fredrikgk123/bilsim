@@ -1,19 +1,15 @@
 #include "powerup.hpp"
+#include "object_sizes.hpp"
 #include <cmath>
-
-namespace {
-    constexpr float POWERUP_SIZE = 0.8f;
-    constexpr float POWERUP_ROTATION_SPEED = 2.0f;
-}
 
 Powerup::Powerup(float x, float y, float z, PowerupType type)
     : GameObject(x, y, z),
       type_(type),
-      rotationSpeed_(POWERUP_ROTATION_SPEED) {
+      rotationSpeed_(2.0f) {
     // Set powerup size
-    size_[0] = POWERUP_SIZE;
-    size_[1] = POWERUP_SIZE;
-    size_[2] = POWERUP_SIZE;
+    size_[0] = ObjectSizes::POWERUP_SIZE;
+    size_[1] = ObjectSizes::POWERUP_SIZE;
+    size_[2] = ObjectSizes::POWERUP_SIZE;
 }
 
 void Powerup::update(float deltaTime) {
