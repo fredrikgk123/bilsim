@@ -2,10 +2,10 @@
 #include "miniaudio.h"
 #include "audio_manager.hpp"
 #include "../core/interfaces/IVehicleState.hpp"
-#undef min
-#undef max
 #include <algorithm>
 #include <iostream>
+#include <cmath>
+
 
 namespace {
     // Audio volume constants
