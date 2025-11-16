@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game_object.hpp"
+#include "core/game_object.hpp"
 
 enum class PowerupType {
     NITROUS

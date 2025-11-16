@@ -6,6 +6,11 @@ add_executable(run_tests
     test_validation.cpp
 )
 
+# Add include directories
+target_include_directories(run_tests PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+)
+
 # Link against core library, audio library, and Catch2
 target_link_libraries(run_tests PRIVATE
     core

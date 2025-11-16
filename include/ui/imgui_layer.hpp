@@ -1,7 +1,7 @@
 #pragma once
 
 #include <threepp/threepp.hpp>
-#include "../core/interfaces/IVehicleState.hpp"
+#include "core/interfaces/IVehicleState.hpp"
 
 class ImGuiLayer {
 public:

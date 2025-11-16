@@ -1,5 +1,5 @@
-#include "audio_manager.hpp"
-#include "../core/interfaces/IVehicleState.hpp"
+#include "audio/audio_manager.hpp"
+#include "core/interfaces/IVehicleState.hpp"
 #include <algorithm>
 #include <iostream>
 #include <cmath>

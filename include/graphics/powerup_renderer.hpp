@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game_object_renderer.hpp"
-#include "../core/powerup.hpp"
+#include "graphics/game_object_renderer.hpp"
+#include "core/powerup.hpp"
 
 class PowerupRenderer : public GameObjectRenderer {
 public:

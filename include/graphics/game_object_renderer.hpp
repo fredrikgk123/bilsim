@@ -2,7 +2,7 @@
 
 #include <threepp/threepp.hpp>
 #include <memory>
-#include "../core/game_object.hpp"
+#include "core/game_object.hpp"
 
 // Generic renderer that can render any GameObject
 class GameObjectRenderer {

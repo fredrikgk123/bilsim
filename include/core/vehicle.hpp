@@ -1,9 +1,9 @@
 #pragma once
 
 #include <functional>
-#include "game_object.hpp"
-#include "interfaces/IVehicleState.hpp"
-#include "interfaces/IControllable.hpp"
+#include "core/game_object.hpp"
+#include "core/interfaces/IVehicleState.hpp"
+#include "core/interfaces/IControllable.hpp"
 #include <algorithm>
 #include <cmath>
 

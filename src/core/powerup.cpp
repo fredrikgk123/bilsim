@@ -1,6 +1,6 @@
-#include "powerup.hpp"
-#include "object_sizes.hpp"
-#include "vehicle_tuning.hpp"
+#include "core/powerup.hpp"
+#include "core/object_sizes.hpp"
+#include "core/vehicle_tuning.hpp"
 #include <cmath>
 
 namespace {

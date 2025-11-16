@@ -1,5 +1,5 @@
-#include "obstacle.hpp"
-#include "object_sizes.hpp"
+#include "core/obstacle.hpp"
+#include "core/object_sizes.hpp"
 
 Obstacle::Obstacle(float x, float y, float z, ObstacleType type, WallOrientation orientation)
     : GameObject(x, y, z), type_(type), orientation_(orientation) {

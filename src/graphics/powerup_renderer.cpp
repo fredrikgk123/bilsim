@@ -1,4 +1,4 @@
-#include "powerup_renderer.hpp"
+#include "graphics/powerup_renderer.hpp"
 
 using namespace threepp;
 

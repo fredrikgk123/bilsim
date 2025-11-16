@@ -2,8 +2,8 @@
 
 #include <threepp/threepp.hpp>
 #include <functional>
-#include "../core/interfaces/IControllable.hpp"
-#include "../graphics/scene_manager.hpp"
+#include "core/interfaces/IControllable.hpp"
+#include "graphics/scene_manager.hpp"
 
 class InputHandler : public threepp::KeyListener {
 public:

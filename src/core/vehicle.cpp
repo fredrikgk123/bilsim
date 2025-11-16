@@ -1,5 +1,5 @@
-#include "vehicle.hpp"
-#include "vehicle_tuning.hpp"
+#include "core/vehicle.hpp"
+#include "core/vehicle_tuning.hpp"
 #include <algorithm>
 #include <cmath>
 

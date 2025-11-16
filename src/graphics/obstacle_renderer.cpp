@@ -1,4 +1,4 @@
-#include "obstacle_renderer.hpp"
+#include "graphics/obstacle_renderer.hpp"
 
 using namespace threepp;
 

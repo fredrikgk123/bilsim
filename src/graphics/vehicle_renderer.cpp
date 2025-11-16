@@ -1,4 +1,4 @@
-#include "vehicle_renderer.hpp"
+#include "graphics/vehicle_renderer.hpp"
 #include <threepp/loaders/OBJLoader.hpp>
 #include <algorithm>
 #include <cmath>

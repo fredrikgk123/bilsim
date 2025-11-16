@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 using namespace threepp;
-
 int main() {
     try {
         std::cout << "Starting Bilsimulator..." << std::endl;

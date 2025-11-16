@@ -1,16 +1,12 @@
 # Create a library for UI components
 add_library(ui
     imgui_layer.cpp
-    imgui_layer.hpp
     imgui_context.cpp
-    imgui_context.hpp
 )
 
 # Make headers available to other directories
 target_include_directories(ui PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/src/core  # Add core module
-    ${CMAKE_SOURCE_DIR}/src/core/interfaces  # Add interfaces for IVehicleState
+    ${CMAKE_SOURCE_DIR}/include
 )
 
 # If FetchContent provided imgui, add its source dir to includes so <imgui.h> resolves

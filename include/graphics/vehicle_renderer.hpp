@@ -2,8 +2,8 @@
 
 #include <threepp/threepp.hpp>
 
-#include "game_object_renderer.hpp"
-#include "../core/interfaces/IVehicleState.hpp"
+#include "graphics/game_object_renderer.hpp"
+#include "core/interfaces/IVehicleState.hpp"
 #include <string>
 
 class VehicleRenderer : public GameObjectRenderer {

@@ -1,6 +1,6 @@
-#include "obstacle_manager.hpp"
-#include "game_config.hpp"
-#include "random_position_generator.hpp"
+#include "core/obstacle_manager.hpp"
+#include "core/game_config.hpp"
+#include "core/random_position_generator.hpp"
 #include <cmath>
 
 

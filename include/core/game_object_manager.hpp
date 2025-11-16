@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-#include "../core/game_object.hpp"
+#include "core/game_object.hpp"
 
 class GameObjectManager {
 public:

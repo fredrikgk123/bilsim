@@ -1,13 +1,11 @@
 # Create a library for audio components
 add_library(audio
     audio_manager.cpp
-    audio_manager.hpp
 )
 
 # Make headers available to other directories
 target_include_directories(audio PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/src/core/interfaces  # Add interfaces directory
+    ${CMAKE_SOURCE_DIR}/include
 )
 
 # Link against the core library for Vehicle class access

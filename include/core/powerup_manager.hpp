@@ -1,8 +1,8 @@
 #pragma once
 
-#include "powerup.hpp"
-#include "vehicle.hpp"
-#include "game_object_manager.hpp"
+#include "core/powerup.hpp"
+#include "core/vehicle.hpp"
+#include "core/game_object_manager.hpp"
 #include <vector>
 #include <memory>
 

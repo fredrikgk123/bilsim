@@ -1,4 +1,4 @@
-#include "scene_manager.hpp"
+#include "graphics/scene_manager.hpp"
 #include <algorithm>
 #include <cmath>
 

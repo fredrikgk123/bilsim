@@ -1,5 +1,5 @@
-#include "input_handler.hpp"
-#include "../core/vehicle_tuning.hpp"
+#include "input/input_handler.hpp"
+#include "core/vehicle_tuning.hpp"
 
 using namespace threepp;
 

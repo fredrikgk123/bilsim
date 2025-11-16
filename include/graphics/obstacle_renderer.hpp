@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game_object_renderer.hpp"
-#include "../core/obstacle.hpp"
+#include "graphics/game_object_renderer.hpp"
+#include "core/obstacle.hpp"
 
 /**
  * ObstacleRenderer - renders obstacles (walls and trees) in the scene

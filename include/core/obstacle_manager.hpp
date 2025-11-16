@@ -1,9 +1,9 @@
 #pragma once
 
-#include "obstacle.hpp"
-#include "vehicle.hpp"
-#include "game_object_manager.hpp"
-#include "random_position_generator.hpp"
+#include "core/obstacle.hpp"
+#include "core/vehicle.hpp"
+#include "core/game_object_manager.hpp"
+#include "core/random_position_generator.hpp"
 #include <vector>
 #include <memory>
 

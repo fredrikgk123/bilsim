@@ -1,8 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
-#include "../src/core/game_object.hpp"
-#include "../src/core/vehicle.hpp"
-#include "../src/core/powerup.hpp"
+#include "core/game_object.hpp"
+#include "core/vehicle.hpp"
+#include "core/powerup.hpp"
 
 using Catch::Approx;
 

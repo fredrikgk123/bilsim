@@ -1,6 +1,6 @@
-#include "game.hpp"
-#include "game_config.hpp"
-#include "logger.hpp"
+#include "core/game.hpp"
+#include "core/game_config.hpp"
+#include "core/logger.hpp"
 #include <iostream>
 
 Game::Game(threepp::Canvas& canvas)

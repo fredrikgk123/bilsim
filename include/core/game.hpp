@@ -3,16 +3,16 @@
 #include <memory>
 #include <vector>
 #include <threepp/threepp.hpp>
-#include "vehicle.hpp"
-#include "powerup_manager.hpp"
-#include "obstacle_manager.hpp"
-#include "../graphics/vehicle_renderer.hpp"
-#include "../graphics/powerup_renderer.hpp"
-#include "../graphics/obstacle_renderer.hpp"
-#include "../graphics/scene_manager.hpp"
-#include "../input/input_handler.hpp"
-#include "../audio/audio_manager.hpp"
-#include "../ui/imgui_layer.hpp"
+#include "core/vehicle.hpp"
+#include "core/powerup_manager.hpp"
+#include "core/obstacle_manager.hpp"
+#include "graphics/vehicle_renderer.hpp"
+#include "graphics/powerup_renderer.hpp"
+#include "graphics/obstacle_renderer.hpp"
+#include "graphics/scene_manager.hpp"
+#include "input/input_handler.hpp"
+#include "audio/audio_manager.hpp"
+#include "ui/imgui_layer.hpp"
 
 /**
  * Main game class - encapsulates all game logic and state

@@ -1,6 +1,6 @@
-#include "powerup_manager.hpp"
-#include "game_config.hpp"
-#include "random_position_generator.hpp"
+#include "core/powerup_manager.hpp"
+#include "core/game_config.hpp"
+#include "core/random_position_generator.hpp"
 
 
 PowerupManager::PowerupManager(int count, float playAreaSize) {

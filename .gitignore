@@ -36,6 +36,9 @@ _deps/
 *.user
 generated/
 
+# ImGui runtime config
+imgui.ini
+
 # OS specific
 .DS_Store
 Thumbs.db
