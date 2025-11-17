@@ -9,29 +9,14 @@ add_executable(bilsim main.cpp)
 target_include_directories(bilsim PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 # Link all required libraries
-if(WIN32)
-    target_link_libraries(bilsim PRIVATE
-            core
-            graphics
-            input
-            ui
-            audio
-            threepp::threepp
-    )
-
-    # On MSVC, explicitly link imgui to resolve symbols from ui.lib
-    # The ui library links to imgui, but MSVC doesn't automatically pull in
-    # transitive static library dependencies
-    if(MSVC)
-        target_link_libraries(bilsim PRIVATE imgui)
-    endif()
-else()
-    target_link_libraries(bilsim PRIVATE
-            core
-            graphics
-            input
-            ui
-            audio
-            threepp::threepp
-    )
-endif()
+# On Windows, we need to explicitly link imgui because MSVC/MinGW don't
+# automatically resolve symbols from transitive static library dependencies
+target_link_libraries(bilsim PRIVATE
+    core
+    graphics
+    input
+    ui
+    audio
+    threepp::threepp
+    imgui  # Explicitly link imgui (ui also links it, but we need it here for Windows)
+)

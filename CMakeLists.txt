@@ -77,6 +77,7 @@ if(DEFINED imgui_SOURCE_DIR)
     # Try to link glfw if available as a target
     if(TARGET glfw)
         target_link_libraries(imgui PUBLIC glfw)
+        message(STATUS "ImGui: Linked to glfw target")
     endif()
 
     target_compile_features(imgui PUBLIC cxx_std_17)
@@ -86,9 +87,12 @@ if(DEFINED imgui_SOURCE_DIR)
         set_target_properties(imgui PROPERTIES
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
+        message(STATUS "ImGui: Configured for MSVC with matching runtime library")
     endif()
 
     message(STATUS "ImGui library target created successfully")
+else()
+    message(FATAL_ERROR "imgui_SOURCE_DIR not defined - FetchContent failed to download ImGui")
 endif()
 
 FetchContent_GetProperties(miniaudio)
