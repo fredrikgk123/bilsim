@@ -57,7 +57,8 @@ if(DEFINED imgui_SOURCE_DIR)
 
     find_package(OpenGL REQUIRED)
 
-    add_library(imgui STATIC
+    # Use OBJECT library instead of STATIC for better MSVC symbol resolution
+    add_library(imgui OBJECT
         ${imgui_SOURCE_DIR}/imgui.cpp
         ${imgui_SOURCE_DIR}/imgui_draw.cpp
         ${imgui_SOURCE_DIR}/imgui_tables.cpp
@@ -87,10 +88,10 @@ if(DEFINED imgui_SOURCE_DIR)
         set_target_properties(imgui PROPERTIES
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
-        message(STATUS "ImGui: Configured for MSVC with matching runtime library")
+        message(STATUS "ImGui: Configured for MSVC with matching runtime library (OBJECT library)")
     endif()
 
-    message(STATUS "ImGui library target created successfully")
+    message(STATUS "ImGui OBJECT library target created successfully")
 else()
     message(FATAL_ERROR "imgui_SOURCE_DIR not defined - FetchContent failed to download ImGui")
 endif()
