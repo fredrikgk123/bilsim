@@ -52,6 +52,8 @@ FetchContent_MakeAvailable(imgui)
 
 # If FetchContent provided imgui sources, create a simple static target for imgui implementation
 if(DEFINED imgui_SOURCE_DIR)
+    message(STATUS "Building ImGui library from: ${imgui_SOURCE_DIR}")
+
     find_package(OpenGL REQUIRED)
 
     add_library(imgui STATIC
@@ -62,10 +64,12 @@ if(DEFINED imgui_SOURCE_DIR)
         ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
         ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
     )
+
     target_include_directories(imgui PUBLIC
         ${imgui_SOURCE_DIR}
         ${imgui_SOURCE_DIR}/backends
     )
+
     target_link_libraries(imgui PUBLIC glfw OpenGL::GL)
 
     # Ensure imgui compiles with proper settings
@@ -80,6 +84,10 @@ if(DEFINED imgui_SOURCE_DIR)
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
     endif()
+
+    message(STATUS "ImGui library target created successfully")
+else()
+    message(FATAL_ERROR "imgui_SOURCE_DIR not defined - ImGui was not fetched correctly")
 endif()
 
 FetchContent_GetProperties(miniaudio)
