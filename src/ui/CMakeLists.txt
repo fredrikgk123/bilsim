@@ -10,11 +10,17 @@ target_include_directories(ui PUBLIC
 
 # Link against required libraries
 # imgui library contains all ImGui implementation and provides GLFW/OpenGL
+# Link imgui FIRST so its symbols are available
 target_link_libraries(ui PUBLIC
+    imgui  # ImGui library built in root CMakeLists.txt - must be first
     threepp::threepp
     core
-    imgui  # ImGui library built in root CMakeLists.txt
 )
+
+# Ensure imgui is built before ui
+if(TARGET imgui)
+    add_dependencies(ui imgui)
+endif()
 
 # Ensure consistent MSVC runtime library
 if(MSVC)
