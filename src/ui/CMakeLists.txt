@@ -1,5 +1,5 @@
 # Create a library for UI components
-add_library(ui
+add_library(ui STATIC
     imgui_layer.cpp
     imgui_context.cpp
 )
@@ -22,4 +22,11 @@ target_link_libraries(ui PUBLIC
 
 # Ensure imgui is built before ui
 add_dependencies(ui imgui)
+
+# Ensure consistent MSVC runtime library
+if(MSVC)
+    set_target_properties(ui PROPERTIES
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
+    )
+endif()
 

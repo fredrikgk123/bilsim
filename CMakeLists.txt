@@ -83,6 +83,18 @@ if(DEFINED imgui_SOURCE_DIR)
         set_target_properties(imgui PROPERTIES
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
+        # Disable warnings for ImGui on MSVC
+        target_compile_options(imgui PRIVATE /W0)
+        # Ensure symbols are exported
+        target_compile_definitions(imgui PUBLIC IMGUI_API=)
+    endif()
+
+    # Make imgui a static library but force all symbols to be kept
+    if(WIN32)
+        # On Windows, we need to ensure all ImGui symbols are preserved
+        set_target_properties(imgui PROPERTIES
+            WINDOWS_EXPORT_ALL_SYMBOLS OFF  # We're static, don't need DLL export
+        )
     endif()
 
     message(STATUS "ImGui library target created successfully")

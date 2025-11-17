@@ -13,7 +13,6 @@ target_include_directories(bilsim PRIVATE ${CMAKE_SOURCE_DIR}/include)
 # transitive static library dependencies the same way Unix linkers do
 if(WIN32)
     target_link_libraries(bilsim PRIVATE
-            imgui  # Must be first on Windows
             core
             graphics
             input
@@ -21,6 +20,14 @@ if(WIN32)
             audio
             threepp::threepp
     )
+
+    # For MSVC, use /WHOLEARCHIVE to ensure all ImGui symbols are included
+    if(MSVC)
+        target_link_options(bilsim PRIVATE /WHOLEARCHIVE:imgui)
+    else()
+        # For MinGW or other Windows compilers, link imgui directly
+        target_link_libraries(bilsim PRIVATE imgui)
+    endif()
 else()
     target_link_libraries(bilsim PRIVATE
             core
