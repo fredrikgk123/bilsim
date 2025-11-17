@@ -8,14 +8,9 @@ add_subdirectory(audio)
 add_executable(bilsim main.cpp)
 target_include_directories(bilsim PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-# Ensure imgui is built before bilsim
-if(TARGET imgui)
-    add_dependencies(bilsim imgui)
-endif()
-
 # Link all required libraries
+# Note: ui library now contains ImGui implementation compiled directly into it
 target_link_libraries(bilsim PRIVATE
-    imgui  # Link imgui FIRST
     core
     graphics
     input
@@ -24,9 +19,4 @@ target_link_libraries(bilsim PRIVATE
     threepp::threepp
 )
 
-# On MSVC, use linker flags to force inclusion of all ImGui symbols
-if(MSVC)
-    # Get the output file of imgui library
-    target_link_options(bilsim PRIVATE "/WHOLEARCHIVE:imgui.lib")
-endif()
 
