@@ -1,47 +1,39 @@
 #include "ui/imgui_context.hpp"
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
-const char* ImGuiContext::getGLSLVersion() {
-#ifdef __APPLE__
-    return "#version 150";
-#else
-    return "#version 330 core";
-#endif
-}
+std::unique_ptr<ImguiContext> ImGuiContext::instance_ = nullptr;
 
 bool ImGuiContext::initialize(void* windowPtr) {
-    // Create ImGui context if it doesn't exist
-    if (!ImGui::GetCurrentContext()) {
-        ImGui::CreateContext();
-    }
-
-    // Initialize platform/renderer backends
-    auto* window = static_cast<GLFWwindow*>(windowPtr);
-    if (!window) {
+    if (!windowPtr) {
         return false;
     }
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(getGLSLVersion());
-
-    return true;
+    try {
+        // Create threepp's ImguiContext with an empty lambda
+        // The actual UI content will be drawn by ImGuiLayer between newFrame() and render()
+        instance_ = std::make_unique<ImguiFunctionalContext>(windowPtr, []() {});
+        return true;
+    } catch (...) {
+        return false;
+    }
 }
 
 void ImGuiContext::shutdown() {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    instance_.reset();
 }
 
 void ImGuiContext::newFrame() {
+    // threepp's ImguiContext::render() calls these internally, but we need them
+    // separately for our rendering flow
+    if (!instance_) return;
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
 void ImGuiContext::render() {
+    if (!instance_) return;
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

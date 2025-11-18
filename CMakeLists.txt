@@ -27,6 +27,9 @@ FetchContent_Declare(
     GIT_TAG 619cdaacc2e7dc6ea709d8c7f482e2994af7349d
 )
 
+# Enable the ImGui module in threepp (this will build imgui::imgui target)
+set(THREEPP_WITH_IMGUI ON CACHE BOOL "Enable the ImGui module in threepp" FORCE)
+
 # Fetch miniaudio as a single header file
 FetchContent_Declare(
     miniaudio
@@ -41,22 +44,7 @@ FetchContent_Declare(
     GIT_TAG v3.4.0
 )
 
-FetchContent_Declare(
-        imgui
-        GIT_REPOSITORY https://github.com/ocornut/imgui.git
-        GIT_TAG v1.92.4
-)
-
 FetchContent_MakeAvailable(threepp Catch2)
-FetchContent_MakeAvailable(imgui)
-
-# ImGui will be compiled directly into the ui library
-# Just verify that FetchContent succeeded
-if(NOT DEFINED imgui_SOURCE_DIR)
-    message(FATAL_ERROR "imgui_SOURCE_DIR not defined - FetchContent failed to download ImGui")
-else()
-    message(STATUS "ImGui fetched successfully from: ${imgui_SOURCE_DIR}")
-endif()
 
 FetchContent_GetProperties(miniaudio)
 if(NOT miniaudio_POPULATED)

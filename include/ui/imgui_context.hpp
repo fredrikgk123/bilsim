@@ -1,13 +1,10 @@
 #pragma once
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
-struct GLFWwindow;
+#include <threepp/extras/imgui/ImguiContext.hpp>
+#include <memory>
 
 /**
- * Helper class for initializing and cleaning up ImGui
+ * Helper class for initializing and cleaning up ImGui using threepp's built-in support
  */
 class ImGuiContext {
 public:
@@ -26,6 +23,6 @@ public:
 private:
     ImGuiContext() = default;
 
-    static const char* getGLSLVersion();
+    static std::unique_ptr<ImguiContext> instance_;
 };
 
