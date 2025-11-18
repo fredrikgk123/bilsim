@@ -8,6 +8,14 @@ target_include_directories(ui PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )
 
+# Add ImGui include directories so imgui.h can be found
+if(DEFINED imgui_SOURCE_DIR)
+    target_include_directories(ui PUBLIC
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+    )
+endif()
+
 # Include ImGui object files (created as an OBJECT library in the top-level CMake) so
 # ui will contain ImGui implementation objects and resolve ImGui symbols at link time.
 # This consumes the OBJECT library produced by the top-level `imgui` target.
