@@ -1,8 +1,10 @@
+// AI Assistance: GitHub Copilot was used for RAII pattern implementation
+// and modern C++20 resource management techniques.
+
 #pragma once
 
 #include <threepp/extras/imgui/ImguiContext.hpp>
 #include <memory>
-#include <stdexcept>
 
 /**
  * RAII wrapper for ImGui context using threepp's built-in support.

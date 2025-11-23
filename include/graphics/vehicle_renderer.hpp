@@ -1,3 +1,6 @@
+// AI Assistance: GitHub Copilot was used for OBJ model loading
+// and 3D transformation matrix calculations.
+
 #pragma once
 
 #include <threepp/threepp.hpp>

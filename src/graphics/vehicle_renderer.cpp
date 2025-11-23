@@ -1,3 +1,6 @@
+// AI Assistance: GitHub Copilot was used for OBJ file loading,
+// 3D model transformation matrices, and wheel rotation calculations.
+
 #include "graphics/vehicle_renderer.hpp"
 #include <threepp/loaders/OBJLoader.hpp>
 #include <algorithm>

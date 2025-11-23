@@ -1,5 +1,9 @@
+// AI Assistance: GitHub Copilot was used for RAII wrapper pattern
+// and exception-safe resource management implementation.
+
 #include "ui/imgui_context.hpp"
 #include <iostream>
+#include <stdexcept>
 
 ImGuiContext::ImGuiContext(void* windowPtr)
     : instance_(nullptr), initialized_(false) {

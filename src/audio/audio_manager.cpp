@@ -1,3 +1,6 @@
+// AI Assistance: GitHub Copilot was used for miniaudio API integration,
+// real-time pitch modulation calculations, and audio streaming setup.
+
 #include "audio/audio_manager.hpp"
 #include "core/interfaces/IVehicleState.hpp"
 #include <algorithm>

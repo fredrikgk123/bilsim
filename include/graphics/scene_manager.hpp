@@ -1,3 +1,6 @@
+// AI Assistance: GitHub Copilot was used for threepp API integration
+// and 3D rendering pipeline setup.
+
 #pragma once
 
 #include <threepp/threepp.hpp>

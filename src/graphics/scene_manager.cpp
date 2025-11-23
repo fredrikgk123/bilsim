@@ -1,3 +1,6 @@
+// AI Assistance: GitHub Copilot was used for threepp API integration,
+// camera projection matrix calculations, and viewport rendering setup.
+
 #include "graphics/scene_manager.hpp"
 #include <algorithm>
 #include <cmath>

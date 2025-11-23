@@ -1,3 +1,6 @@
+// AI Assistance: GitHub Copilot was used for miniaudio API integration
+// and custom deleters for C resource management.
+
 #pragma once
 
 #include <string>
