@@ -1,30 +1,40 @@
 #include "ui/imgui_context.hpp"
+#include <iostream>
 
-std::unique_ptr<ImguiContext> ImGuiContext::instance_ = nullptr;
+ImGuiContext::ImGuiContext(void* windowPtr)
+    : instance_(nullptr), initialized_(false) {
 
-bool ImGuiContext::initialize(void* windowPtr) {
     if (!windowPtr) {
-        return false;
+        throw std::invalid_argument("ImGuiContext: windowPtr cannot be null");
     }
 
     try {
         // Create threepp's ImguiContext with an empty lambda
         // The actual UI content will be drawn by ImGuiLayer between newFrame() and render()
         instance_ = std::make_unique<ImguiFunctionalContext>(windowPtr, []() {});
-        return true;
+        initialized_ = true;
+    } catch (const std::exception& e) {
+        std::cerr << "ImGuiContext initialization failed: " << e.what() << std::endl;
+        throw std::runtime_error(std::string("Failed to initialize ImGui: ") + e.what());
     } catch (...) {
-        return false;
+        std::cerr << "ImGuiContext initialization failed with unknown error" << std::endl;
+        throw std::runtime_error("Failed to initialize ImGui: unknown error");
     }
 }
 
-void ImGuiContext::shutdown() {
+ImGuiContext::~ImGuiContext() {
+    // Smart pointer automatically cleans up resources
+    // No manual cleanup needed - RAII handles everything
     instance_.reset();
+    initialized_ = false;
 }
 
 void ImGuiContext::newFrame() {
     // threepp's ImguiContext::render() calls these internally, but we need them
     // separately for our rendering flow
-    if (!instance_) return;
+    if (!initialized_ || !instance_) {
+        return;
+    }
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -32,7 +42,9 @@ void ImGuiContext::newFrame() {
 }
 
 void ImGuiContext::render() {
-    if (!instance_) return;
+    if (!initialized_ || !instance_) {
+        return;
+    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

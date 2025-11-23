@@ -6,6 +6,7 @@
 Game::Game(threepp::Canvas& canvas)
     : canvas_(canvas),
       audioEnabled_(true),
+      shouldExit_(false),
       clock_(),
       lastWindowWidth_(0),
       lastWindowHeight_(0) {

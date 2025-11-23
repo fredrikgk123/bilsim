@@ -77,10 +77,18 @@ private:
 
     // State
     bool audioEnabled_;
+    bool shouldExit_;  // Flag to signal graceful exit from game loop
     threepp::Clock clock_;
 
     // Window size tracking for resize detection
     int lastWindowWidth_;
     int lastWindowHeight_;
+
+public:
+    // Check if game should exit
+    [[nodiscard]] bool shouldExit() const noexcept { return shouldExit_; }
+
+    // Signal graceful exit
+    void requestExit() noexcept { shouldExit_ = true; }
 };
 
