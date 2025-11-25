@@ -2,7 +2,7 @@
 
 **Candidate Number:** [YOUR CANDIDATE NUMBER]
 
-> **Note:** AI assistance (GitHub Copilot) was used for audio engine integration, 3D rendering pipeline, and RAII resource management patterns. Core game logic, physics, and collision systems were independently implemented.
+> **Note:** AI assistance (GitHub Copilot) was used for audio engine integration, 3D rendering pipeline, github actions, and RAII resource management patterns. Core game logic, physics, and collision systems were independently implemented.
 
 ---
 
@@ -14,7 +14,7 @@ Built with:
 - **C++20** 
 - **threepp** (3D rendering engine)
 - **miniaudio** (audio engine for engine/drift sounds)
-- **ImGui** (dashboard UI and debugging tools)
+- **ImGui** (dashboard UI)
 - **Catch2** (unit testing framework)
 
 ---
@@ -49,32 +49,6 @@ Built with:
 
 ---
 
-## How do I use it?
-
-### Build
-
-```bash
-git clone [repository-url]
-cd bilsim
-mkdir build && cd build
-cmake ..
-cmake --build .
-# or reuse the configured directory
-cmake --build ../cmake-build-debug-cmake --target bilsim
-```
-
-### Run
-
-```bash
-./cmake-build-debug-cmake/src/bilsim
-```
-
-### Test
-
-```bash
-cd cmake-build-debug-cmake
-ctest --output-on-failure
-```
 
 ### Controls
 
@@ -100,17 +74,30 @@ ctest --output-on-failure
 
 ### What I'm satisfied with
 
-[FILL IN – e.g., modern C++ practices, modular design, physics fidelity, audio integration, tests]
+First of all I am satisfied with making a functional 3D car simulator in C++. The task was quite intimidating at first, considering my little prior knowledge about OOP, but breaking it down into smaller components made it manageable. I like how the simulator look and feels, with responsive controls and a decent driving experience. The integration of audio and UI elements also adds to the overall immersion.
+
 
 ### Areas for improvement
 
-[FILL IN – e.g., delta-time clamping, fixed timestep, spatial partitioning, config files]
+While I'm happy with the end result, there are several things I would do differently if I started over. The collision system works well for what I needed, but it's quite basic with simple circle-based detection. For a larger game with more objects, I'd look into spatial partitioning to improve performance instead of checking every object against every other object.
+
+I also hardcoded a lot of values like speeds and forces directly in the code – using configuration files would make it much easier to tweak and balance the game without recompiling.
+
+Another thing is the delta time handling. I did implement delta time for frame-independent movement, which I'm glad I did, but I learned afterwards that using a fixed timestep for physics would be more stable and predictable. The way it is now, the physics can behave slightly differently depending on frame rate.
+
+Testing was something I added later in the project, and I wish I had started with it from the beginning. Writing tests as I built features would have caught bugs earlier and made me more confident in making changes.
 
 ---
 
 ## What I learned
 
-[FILL IN – summarize key takeaways]
+This project taught me a lot about structuring a larger C++ program. Coming in with limited OOP experience, I learned how to organize code into logical components and how different systems can communicate with each other. The concept of smart pointers and RAII was completely new to me, but now I understand why manual memory management with raw pointers is considered risky.
+
+I also learned that building something complex doesn't mean doing everything yourself. Using libraries like threepp for rendering and miniaudio for sound let me focus on the actual game logic instead of reinventing the wheel. Knowing when to use existing tools is just as important as knowing how to code.
+
+The debugging process taught me patience and systematic thinking. When something didn't work, I learned to break down the problem into smaller pieces and test each part individually. The unit tests I wrote using Catch2 really helped with this approach.
+
+Overall, this project showed me that even intimidating tasks become manageable when you break them down and tackle them one piece at a time. I'm proud of what I built and excited to apply these skills to future projects.
 
 ---
 

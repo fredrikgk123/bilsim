@@ -1,5 +1,7 @@
+# AI Assistance: GitHub Copilot was used to generate this CI/CD workflow configuration
 # CI configuration for bilsim - inspired by threepp's proven CI setup
 # Requirements: CMake 3.21+, C++20
+
 name: Bilsim CI
 
 on:
