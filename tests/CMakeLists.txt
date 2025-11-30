@@ -11,11 +11,12 @@ target_include_directories(run_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
 
-# Link against core library, audio library, and Catch2
+# Link against core library, audio library, Catch2, and threading library
 target_link_libraries(run_tests PRIVATE
     core
     audio
     Catch2::Catch2WithMain
+    Threads::Threads
 )
 
 # Ensure assets are copied before running tests
@@ -31,4 +32,3 @@ add_test(NAME AllTests COMMAND $<TARGET_FILE:run_tests>)
 set_tests_properties(AllTests PROPERTIES
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests
 )
-

@@ -16,6 +16,9 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Find threading library (cross-platform: Windows native threads, POSIX on Unix)
+find_package(Threads REQUIRED)
+
 include(FetchContent)
 
 set(THREEPP_BUILD_TESTS OFF)
@@ -37,12 +40,16 @@ FetchContent_Declare(
     DOWNLOAD_NO_EXTRACT TRUE
 )
 
-# Fetch Catch2 for unit testing
+# Fetch Catch2 for unit testing - use newer version with better Windows support
 FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.4.0
+    GIT_TAG v3.5.1
 )
+
+# Disable Catch2 features that require pthreads
+set(CATCH_CONFIG_NO_POSIX_SIGNALS ON CACHE BOOL "Disable POSIX signals in Catch2")
+set(CATCH_CONFIG_NO_WINDOWS_SEH ON CACHE BOOL "Disable Windows SEH in Catch2")
 
 FetchContent_MakeAvailable(threepp Catch2)
 
@@ -72,3 +79,4 @@ add_dependencies(bilsim copy_assets)
 
 message(STATUS "bilsim configured successfully with audio support (miniaudio)")
 message(STATUS "Catch2 testing framework configured")
+message(STATUS "Threading library: ${CMAKE_THREAD_LIBS_INIT}")
