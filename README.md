@@ -8,7 +8,7 @@
 
 ## What is this?
 
-This is a 3D car simulator built with C++20. The project features a square map on a 2D plane with obstacles and powerups scattered around. The simulator contains simple circle-based collision detection, dynamic steering and a responsive UI.
+This is a 3D car simulator built with C++20. The project features a square map on a 2D plane with obstacles and powerups scattered around. The simulator contains simple circle-based collision detection, dynamic steering and a responsive UI. There is no win/lose condition – the focus is on driving and drifting around the map.
 
 Built with:
 - **C++20** 
@@ -32,7 +32,7 @@ Built with:
 
 #### Game Systems
 - Collision detection with obstacles, trees and border that stops the car
-- Powerup manager with nitrous pickups that respawn
+- Powerup manager with nitrous pickups
 - Respawn system that resets the car to the spawn point and respawns powerups
 - Multiple camera angles (follow, interior)
 
