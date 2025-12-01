@@ -12,7 +12,7 @@ public:
     virtual void update(float deltaTime) = 0;
 
     // Reset to initial state
-    virtual void reset();
+    virtual void reset() noexcept;
 
     // Getters
     [[nodiscard]] virtual const std::array<float, 3>& getPosition() const noexcept;

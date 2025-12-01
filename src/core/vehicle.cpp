@@ -4,12 +4,12 @@
 #include <cmath>
 
 namespace {
-    // Vehicle update constants
-    constexpr float STOPPED_SPEED_THRESHOLD = 0.1f;           // Speed below which vehicle is considered stopped
-    constexpr float DRIFT_ANGLE_MAX_DEGREES = VehicleTuning::PI / 3.0f;  // 60 degrees max drift angle
+    // Vehicle update constants - use VehicleTuning constant to avoid duplication
+    constexpr float DRIFT_ANGLE_MAX_RADIANS = VehicleTuning::PI / 3.0f;  // 60 degrees (π/3 radians) max drift angle
     constexpr float STEERING_DECAY_RATE = 0.85f;              // Rate at which steering returns to center
     constexpr float STEERING_ZERO_THRESHOLD = 0.01f;          // Below this, steering is set to zero
     constexpr float MAX_VELOCITY_MULTIPLIER = 1.5f;           // Safety margin for setVelocity clamping
+    constexpr float DEFAULT_SCALE = 1.0f;                     // Default vehicle scale
 
     // Friction calculation constants
     constexpr float FRICTION_MIN_CLAMP = 0.01f;               // Minimum speed ratio to prevent log(0)
@@ -29,7 +29,9 @@ Vehicle::Vehicle(float x, float y, float z)
       nitrousTimeRemaining_(0.0f),
       currentGear_(1),
       rpm_(VehicleTuning::IDLE_RPM),
-      accelMultiplier_(1.0f) {
+      scale_(DEFAULT_SCALE),
+      accelMultiplier_(1.0f),
+      resetCameraCallback_() {
     // Set vehicle-specific size
     size_[0] = VehicleTuning::VEHICLE_WIDTH;
     size_[1] = VehicleTuning::VEHICLE_HEIGHT;
@@ -71,7 +73,7 @@ void Vehicle::turn(float amount) noexcept {
         driftAngle_ += amount * VehicleTuning::TURN_SPEED * turnRate * VehicleTuning::DRIFT_ANGLE_MULTIPLIER * turnDirection;
 
         // Increased max drift angle to ~60 degrees for more dramatic slides
-        driftAngle_ = (std::clamp)(driftAngle_, -DRIFT_ANGLE_MAX_DEGREES, DRIFT_ANGLE_MAX_DEGREES);
+        driftAngle_ = (std::clamp)(driftAngle_, -DRIFT_ANGLE_MAX_RADIANS, DRIFT_ANGLE_MAX_RADIANS);
     }
 
     // Normalize rotation to [0, 2π]
@@ -203,7 +205,7 @@ void Vehicle::updateVelocity(float deltaTime) noexcept {
 
 void Vehicle::updateRPM() noexcept {
     float absoluteVelocity = std::abs(velocity_);
-    if (absoluteVelocity < STOPPED_SPEED_THRESHOLD) {
+    if (absoluteVelocity < VehicleTuning::MIN_SPEED_THRESHOLD) {
         // Idle RPM when stopped
         rpm_ = VehicleTuning::IDLE_RPM;
     } else if (currentGear_ > 0 && currentGear_ <= VehicleTuning::NUM_GEARS) {
@@ -252,7 +254,7 @@ void Vehicle::decayAcceleration() noexcept {
     }
 }
 
-void Vehicle::reset() {
+void Vehicle::reset() noexcept {
     GameObject::reset();
     velocity_ = 0.0f;
     acceleration_ = 0.0f;
@@ -342,7 +344,7 @@ float Vehicle::getGearAccelerationMultiplier() const noexcept {
 
 void Vehicle::setScale(float scale) noexcept {
     // Clamp to reasonable values
-    if (scale <= 0.0f) scale = 1.0f;
+    if (scale <= 0.0f) scale = DEFAULT_SCALE;
     scale_ = scale;
 
     // Update collision/size used by renderers

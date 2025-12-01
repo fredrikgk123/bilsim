@@ -64,8 +64,6 @@ int main() {
         // Cleanup happens automatically via RAII
         // smart pointers (game, imguiContext) destruct in reverse order
         std::cout << "Shutting down..." << std::endl;
-        game.reset();  // Explicit cleanup of game first
-        imguiContext.reset();  // Then ImGui
 
         std::cout << "Bilsimulator exited successfully." << std::endl;
         return 0;

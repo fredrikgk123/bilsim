@@ -21,6 +21,5 @@ public:
     virtual void activateNitrous() noexcept = 0;
 
     // State management
-    virtual void reset() = 0;
+    virtual void reset() noexcept = 0;
 };
-

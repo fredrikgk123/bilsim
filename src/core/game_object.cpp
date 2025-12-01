@@ -16,7 +16,7 @@ GameObject::GameObject(float x, float y, float z)
       active_(true) {
 }
 
-void GameObject::reset() {
+void GameObject::reset() noexcept {
     position_ = initialPosition_;
     rotation_ = initialRotation_;
     active_ = true;

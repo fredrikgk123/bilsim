@@ -32,7 +32,7 @@ public:
 
     // Override from GameObject
     void update(float deltaTime) override;
-    void reset() override;
+    void reset() noexcept override;
 
     // Getters (implement IVehicleState)
     [[nodiscard]] float getVelocity() const noexcept override;

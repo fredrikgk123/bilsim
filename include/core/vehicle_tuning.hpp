@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numbers>
+#include <array>
 #include "object_sizes.hpp"
 
 namespace VehicleTuning {
@@ -67,6 +68,16 @@ inline constexpr float GEAR_SPEEDS[NUM_GEARS + 1] = {
 inline constexpr float GEAR_ACCELERATION_MULTIPLIERS[NUM_GEARS] = {
     1.5f, 1.2f, 1.0f, 0.8f, 0.6f
 };
+
+// Compile-time validation of array sizes
+static_assert(sizeof(GEAR_SPEEDS) / sizeof(GEAR_SPEEDS[0]) == NUM_GEARS + 1,
+              "GEAR_SPEEDS array size must match NUM_GEARS + 1");
+static_assert(sizeof(GEAR_ACCELERATION_MULTIPLIERS) / sizeof(GEAR_ACCELERATION_MULTIPLIERS[0]) == NUM_GEARS,
+              "GEAR_ACCELERATION_MULTIPLIERS array size must match NUM_GEARS");
+
+// Compile-time validation that MAX_SPEED != TURN_RATE_MEDIUM_SPEED to prevent division by zero
+static_assert(MAX_SPEED != TURN_RATE_MEDIUM_SPEED,
+              "MAX_SPEED must not equal TURN_RATE_MEDIUM_SPEED to prevent division by zero");
 
 inline constexpr float PI = std::numbers::pi_v<float>;
 inline constexpr float TWO_PI = 2.0f * PI;
