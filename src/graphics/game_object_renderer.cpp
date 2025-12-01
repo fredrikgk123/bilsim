@@ -12,7 +12,7 @@ GameObjectRenderer::GameObjectRenderer(Scene &scene, const GameObject &gameObjec
 }
 
 GameObjectRenderer::~GameObjectRenderer() {
-    if (objectGroup_ != nullptr) {
+    if (objectGroup_) {
         scene_.remove(*objectGroup_);
     }
 }
@@ -43,7 +43,7 @@ void GameObjectRenderer::update() {
 }
 
 void GameObjectRenderer::setVisible(bool visible) {
-    if (objectGroup_ != nullptr) {
+    if (objectGroup_) {
         objectGroup_->visible = visible;
     }
 }

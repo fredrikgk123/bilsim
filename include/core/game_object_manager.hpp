@@ -15,7 +15,7 @@ public:
     virtual void handleCollisions(class Vehicle& vehicle) = 0;
 
     // Reset all objects to initial state
-    virtual void reset() = 0;
+    virtual void reset() noexcept = 0;
 
     // Get the number of active objects
     virtual size_t getCount() const = 0;
