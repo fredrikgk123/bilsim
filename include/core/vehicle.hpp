@@ -4,8 +4,8 @@
 #include "core/game_object.hpp"
 #include "core/interfaces/IVehicleState.hpp"
 #include "core/interfaces/IControllable.hpp"
+#include "core/vehicle_tuning.hpp"
 #include <algorithm>
-#include <cmath>
 
 class Vehicle : public GameObject, public IVehicleState, public IControllable {
 public:
@@ -36,7 +36,7 @@ public:
 
     // Getters (implement IVehicleState)
     [[nodiscard]] float getVelocity() const noexcept override;
-    [[nodiscard]] static float getMaxSpeed() noexcept;
+    [[nodiscard]] static constexpr float getMaxSpeed() noexcept { return VehicleTuning::MAX_SPEED; }
     [[nodiscard]] float getDriftAngle() const noexcept override;  // Get current drift angle for camera
     [[nodiscard]] int getCurrentGear() const noexcept override;   // Get current gear number
     [[nodiscard]] float getRPM() const noexcept override;         // Get current engine RPM (for UI/audio)
@@ -89,7 +89,7 @@ private:
     float nitrousTimeRemaining_;              // Time left for nitrous boost
 
     // Gear system state
-    int currentGear_;                         // Current gear (0 = reverse, 1-5 = forward gears)
+    int currentGear_;                         // Current gear (0 = reverse, 1-4 = forward gears)
     float rpm_;                               // Current engine RPM
 
     // Runtime scale
