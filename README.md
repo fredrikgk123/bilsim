@@ -2,7 +2,7 @@
 
 **Candidate Number:** [YOUR CANDIDATE NUMBER]
 
-> **Note:** AI assistance (GitHub Copilot) was used for audio engine integration, 3D rendering pipeline, and RAII resource management patterns. Core game logic, physics, and collision systems were independently implemented.
+> **Note:** AI assistance (GitHub Copilot) was used for audio engine integration, 3D rendering pipeline, and RAII resource management patterns. Core game logic, physics, and collision systems were mostly independently implemented.
 
 ---
 
