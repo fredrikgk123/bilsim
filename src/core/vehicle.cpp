@@ -13,8 +13,8 @@ namespace {
 
     // Friction calculation constants
     constexpr float FRICTION_MIN_CLAMP = 0.01f;               // Minimum speed ratio to prevent log(0)
-    constexpr float FRICTION_BASE_VALUE = 0.994f;             // Base friction value
-    constexpr float FRICTION_LOG_OFFSET = 4.6f;               // Logarithmic curve offset
+    constexpr float FRICTION_BASE_VALUE = 0.994f;             // Base friction value (empirically tuned for smooth deceleration)
+    constexpr float FRICTION_LOG_OFFSET = 4.6f;               // Logarithmic curve offset (empirically tuned for realistic speed decay)
 }
 
 Vehicle::Vehicle(float x, float y, float z)
@@ -281,10 +281,6 @@ float Vehicle::getVelocity() const noexcept {
     return velocity_;
 }
 
-float Vehicle::getMaxSpeed() noexcept {
-    return VehicleTuning::MAX_SPEED;
-}
-
 void Vehicle::setVelocity(float velocity) noexcept {
     // Clamp velocity to reasonable bounds to prevent physics bugs
     const float MAX_VELOCITY = VehicleTuning::MAX_SPEED * MAX_VELOCITY_MULTIPLIER;  // Allow slight overspeed
@@ -351,6 +347,9 @@ void Vehicle::setScale(float scale) noexcept {
     size_[0] = VehicleTuning::VEHICLE_WIDTH * scale_;
     size_[1] = VehicleTuning::VEHICLE_HEIGHT * scale_;
     size_[2] = VehicleTuning::VEHICLE_LENGTH * scale_;
+
+    // Update cached collision radius after size change
+    updateCollisionRadius();
 }
 
 [[nodiscard]] float Vehicle::getScale() const noexcept {
