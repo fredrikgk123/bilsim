@@ -39,7 +39,7 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
     if (!ImGui::GetCurrentContext()) return;
 
     // HUD constants
-    constexpr float MAX_DISPLAY_SPEED_KMH = 150.0f;
+    constexpr float MAX_DISPLAY_SPEED_KMH = 175.0f;
     constexpr float MAX_RPM = 7000.0f;
 
     const float speedKmh = std::abs(vehicle.getVelocity()) * MS_TO_KMH;
@@ -156,8 +156,7 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
                 const float valueFont = std::max(14.0f, radius * 0.28f);
                 const ImVec2 txtSize = font->CalcTextSizeA(valueFont, FLT_MAX, 0.0f, valueText);
                 dl->AddText(font, valueFont, ImVec2(center.x - txtSize.x * 0.5f, center.y + radius * 0.18f - txtSize.y * 0.5f), toU32(ImVec4(1, 1, 1, 0.98f)), valueText);
-            }
-            if (!isRPM) {
+
                 const float labelFont = std::max(10.0f, radius * 0.12f);
                 const ImVec2 lblSize = font->CalcTextSizeA(labelFont, FLT_MAX, 0.0f, label);
                 dl->AddText(font, labelFont, ImVec2(center.x - lblSize.x * 0.5f, center.y + radius * 0.33f - lblSize.y * 0.5f), toU32(ImVec4(0.8f, 0.8f, 0.8f, 0.9f)), label);
@@ -249,4 +248,3 @@ void ImGuiLayer::render(const IVehicleState& vehicle, const threepp::WindowSize&
 
 
 }
-
