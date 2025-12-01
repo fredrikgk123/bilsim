@@ -1,9 +1,14 @@
-# Test executable
+# Test executable - mark as ALL to ensure it's built by default
 add_executable(run_tests
     test_vehicle.cpp
     test_gameObject.cpp
     test_collision.cpp
     test_validation.cpp
+)
+
+# Ensure test executable is built as part of the default ALL target
+set_target_properties(run_tests PROPERTIES
+    EXCLUDE_FROM_ALL FALSE
 )
 
 # Add include directories
