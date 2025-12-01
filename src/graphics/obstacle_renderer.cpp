@@ -1,11 +1,12 @@
 #include "graphics/obstacle_renderer.hpp"
+#include "core/game_config.hpp"
 
 using namespace threepp;
 
 namespace {
-    // Wall visual constants
+    // Wall visual constants (for rendering - may differ from collision sizes) //not happy with this solution
     constexpr float WALL_WIDTH = 5.0f;
-    constexpr float WALL_HEIGHT = 5.0f;
+    constexpr float WALL_HEIGHT = 5.0f;  // Visual height for rendering
     constexpr float WALL_DEPTH = 2.0f;
     constexpr unsigned int WALL_COLOR = 0x8B4513;
 
