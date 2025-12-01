@@ -5,6 +5,10 @@
 
 
 ObstacleManager::ObstacleManager(float playAreaSize, int treeCount) {
+    // Reserve space for walls and trees to prevent reallocations
+    const int segmentsPerSide = static_cast<int>(playAreaSize / GameConfig::Obstacle::WALL_SEGMENT_LENGTH);
+    obstacles_.reserve(segmentsPerSide * 4 + treeCount);
+
     generateWalls(playAreaSize);
     generateTrees(treeCount, playAreaSize);
 }
@@ -101,7 +105,8 @@ void ObstacleManager::handleCollisions(Vehicle& vehicle) {
             // Stop the vehicle
             vehicle.setVelocity(0.0f);
 
-            // Only process first collision per frame
+            // Only process first collision per frame to prevent jitter
+            // Note: This may not fully resolve corner collisions between multiple obstacles
             break;
         }
     }
