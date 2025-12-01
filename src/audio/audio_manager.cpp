@@ -3,6 +3,7 @@
 
 #include "audio/audio_manager.hpp"
 #include "core/interfaces/IVehicleState.hpp"
+#include "core/game_config.hpp"
 #include <algorithm>
 #include <iostream>
 #include <cmath>
@@ -40,9 +41,6 @@ namespace {
 
     // Reference speeds for audio calculation
     constexpr float BASE_REFERENCE_SPEED = 20.0f;
-
-    // Asset path
-    const std::string DRIFT_SOUND_PATH = "assets/tireScreech.wav";
 }
 
 // Implement custom deleters
@@ -72,28 +70,28 @@ AudioManager::AudioManager()
 AudioManager::~AudioManager() = default;
 
 bool AudioManager::initialize(std::string_view engineSoundPath) {
-    // Initialize audio engine - use unique_ptr from the start for exception safety
-    std::unique_ptr<ma_engine, AudioDeleter> engine(new ma_engine());
-    ma_result result = ma_engine_init(nullptr, engine.get());
+    // Initialize audio engine - allocate directly into unique_ptr for exception safety
+    engine_.reset(new ma_engine());
+    ma_result result = ma_engine_init(nullptr, engine_.get());
 
     if (result != MA_SUCCESS) {
         std::cerr << "Failed to initialize audio engine: " << result << std::endl;
+        engine_.reset();
         return false;
     }
-    engine_ = std::move(engine);
     initialized_ = true;
 
-    // Load engine sound file - use unique_ptr from the start
-    std::unique_ptr<ma_sound, AudioDeleter> sound(new ma_sound());
+    // Load engine sound file - allocate directly into unique_ptr
+    engineSound_.reset(new ma_sound());
     result = ma_sound_init_from_file(engine_.get(), engineSoundPath.data(),
                                      MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
-                                     nullptr, nullptr, sound.get());
+                                     nullptr, nullptr, engineSound_.get());
 
     if (result != MA_SUCCESS) {
         std::cerr << "Failed to load engine sound from: " << engineSoundPath << " (error: " << result << ")" << std::endl;
+        engineSound_.reset();
         return false;
     }
-    engineSound_ = std::move(sound);
 
     // Configure sound playback
     ma_sound_set_looping(engineSound_.get(), MA_TRUE);
@@ -104,21 +102,20 @@ bool AudioManager::initialize(std::string_view engineSoundPath) {
     soundLoaded_ = true;
 
     // Load drift/tire screech sound file
-    std::unique_ptr<ma_sound, AudioDeleter> driftSnd(new ma_sound());
-    result = ma_sound_init_from_file(engine_.get(), DRIFT_SOUND_PATH.c_str(),
+    driftSound_.reset(new ma_sound());
+    result = ma_sound_init_from_file(engine_.get(), GameConfig::Assets::DRIFT_SOUND_PATH,
                                      MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
-                                     nullptr, nullptr, driftSnd.get());
+                                     nullptr, nullptr, driftSound_.get());
 
     if (result != MA_SUCCESS) {
-        std::cerr << "Warning: Failed to load drift sound from: " << DRIFT_SOUND_PATH << " (error: " << result << ")" << std::endl;
+        std::cerr << "Warning: Failed to load drift sound from: " << GameConfig::Assets::DRIFT_SOUND_PATH << " (error: " << result << ")" << std::endl;
+        driftSound_.reset();
         return false;
-
-    } else {
-        driftSound_ = std::move(driftSnd);
-        ma_sound_set_looping(driftSound_.get(), MA_TRUE);
-        ma_sound_set_volume(driftSound_.get(), DRIFT_SOUND_VOLUME);
-        driftSoundLoaded_ = true;
     }
+
+    ma_sound_set_looping(driftSound_.get(), MA_TRUE);
+    ma_sound_set_volume(driftSound_.get(), DRIFT_SOUND_VOLUME);
+    driftSoundLoaded_ = true;
 
     return true;
 }
